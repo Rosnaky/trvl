@@ -11,7 +11,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from langchain.chat_models import init_chat_model
 from pydantic import ValidationError
 
-from schema import Data, Project
+from schema import Items, Item
 
 class CohereAPI:
     def __init__(self, cohere_api_key: str, pinecone_api_key: str, model_name: str = "command-r-plus"):
@@ -27,39 +27,29 @@ class CohereAPI:
             search_type="similarity"
         )
     
-    def addDocument(self, name: str, data: str):
+    def add_document(self, data: str):
         document = Document(
             page_content=data,
-            metadata=self.extract_structured_data(data).dict()
+            metadata=self.extract_structured_data(data).model_dump()
         )
-        # embedded_doc = self.vector_store.embedding_function.embed_query(document.page_content)
     
         self.vector_store.add_documents([document])
 
-    def retrieveDocuments(self, prompt: str, num_documents: int = 1):
-        # structured_model = self.langchainModel.with_structured_output(Project)
+    def retrieve_documents(self, prompt: str, num_documents: int = 1):
 
         docs = self.retriever.invoke(prompt, k=num_documents)
 
         # print(docs)
 
-        # docs_text = (d.page_content for d in docs)
-
-        # with open("b.txt", "w", encoding="utf-8") as f:
-        #     json.dump(docs[0].metadata, f, indent=4, ensure_ascii=False)
-
         return docs
 
-    def parse_response_to_project(self, response: str) -> List[Project]:
-        # Implement your parsing logic here to extract the required fields from the response
+    def parse_response_to_project(self, response: str) -> List[Item]:
         projects = []
 
-        # Example: Suppose response is a list of structured text or JSON-like structure:
         for project_data in response.split("\n"):
-            # Parse project data (this can be changed to a better parsing method)
             try:
-                project_info = project_data.split(",")  # Example of a comma-separated response
-                project = Project(
+                project_info = project_data.split(",")
+                project = Item(
                     projectName=project_info[0],
                     entityName=project_info[1],
                     url=project_info[2],
@@ -70,7 +60,7 @@ class CohereAPI:
                 )
                 projects.append(project)
             except IndexError:
-                continue  # Handle any data misformatting gracefully
+                continue
 
         return projects
     
@@ -80,24 +70,25 @@ class CohereAPI:
             ensuring it follows this schema:
 
             {
-                "projectName": "The name of the project",
-                "entityName": "The name of the organization that is requesting a proposal",
-                "url": "The url to the request of the proposal",
-                "description": "A short description of the proposal or project",
-                "publicationDate": "The publication date of the proposal",
-                "deadlineDate": "The deadline date of the proposal",
-                "sector": "The sector of the project or proposal"
+                "eventName": "The name of the event",
+                "location": "The name of the location of the event",
+                "opening_hours": "The hours that the event is open in the format of HH:MM-HH:MM",
+                "min_cost": "The minimum recommended cost to participate in the event",
+                "max_cost": "The maximum recommended cost to participate in the event",
+                "sector": "The type of activity. It must be one of the following four options: restaurant, activity, flight, hotel."
             }
 
             - If a field is missing in the text, set it to an empty string (`""`) instead of `null`.
-            - If a date is missing, infer a reasonable estimate from the context.
+            - If a date is missing, infer a reasonable estimate from the context, or leave it empty.
             - Ensure the output is valid JSON and does not contain extra explanations.
+            - Do NOT prepend the data with the word json
+            - The first character MUST be { STOP BEING BAD
             """
 
 
         messages = [
             SystemMessage(content=system_prompt),
-            HumanMessage(content=f"Extract structured data from the following text:\n\n{text}")
+            HumanMessage(content=f"Extract structured data from the following text: {text}")
         ]
 
         response = self.langchainModel.invoke(messages)
@@ -107,19 +98,22 @@ class CohereAPI:
 
     def parse_json(self, json_str: str):
         json_str = json_str.replace("\n", "")
+        # print(json_str)
         try:
-            data = json.loads(json_str)  # Convert string to dictionary
+            data = json.loads(json_str) 
 
-            # Fill missing fields with defaults
-            data.setdefault("url", "")
-            data.setdefault("deadlineData", "")
+            data.setdefault("location", "")
+            data.setdefault("opening_hours", "")
+            data.setdefault("sector", "")
+            data.setdefault("min_cost", "")
+            data.setdefault("max_cost", "")
 
             # with open("a.txt", "w") as f:
             #     f.write(str(data))
             
-            project = Project(**data)  # Validate against Pydantic model
-            print(project)
+            project = Item(**data)
+            # print(project)
             return project
         except (json.JSONDecodeError, ValidationError) as e:
             print(f"Error parsing JSON: {e}")
-            return None  # Return None if there's an issue
+            return None

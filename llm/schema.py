@@ -2,15 +2,14 @@ from pydantic import BaseModel, Field
 from typing import List
 
 
-class Project(BaseModel):
-    projectName: str = Field(description="The name of the project")
-    entityName: str = Field(description="The name of the organization that is requesting a proposal")
-    url: str = Field(default="", description="The URL to the request of the proposal")
-    description: str = Field(default="", description="A short description of the proposal or project")
-    publicationDate: str = Field(default="", description="The publication date of the proposal")
-    deadlineDate: str = Field(default="", description="The deadline date of the proposal")
-    sector: str = Field(default="Unknown", description="The sector of the project or proposal")
+class Item(BaseModel):
+    eventName: str = Field(description="The name of the event")
+    location: str = Field(default="", description="The name of the location of the event")
+    opening_hours: str = Field(default="", description="The hours that the event is open in the format of HH:MM-HH:MM")
+    min_cost: str = Field(default="", description="The minimum recommended cost to participate in the event")
+    max_cost: str = Field(default="", description="The maximum recommended cost to participate in the event")
+    sector: str = Field(default="Unknown", description="The type of activity. It must be one of the following four options: restaurant, activity, flight, hotel.")
 
-class Data(BaseModel):
-    projects: List[Project] = Field(description="List of relevant projects")
+class Items(BaseModel):
+    projects: List[Item] = Field(description="List of items")
 
