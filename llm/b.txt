@@ -1,0 +1,9 @@
+{
+    "deadlineDate": "May 1, 2025",
+    "description": "Design and construction of a new educational building to support academic growth and modern learning environments.",
+    "entityName": "Preston High School",
+    "projectName": "Preston High School – New Building Construction Project",
+    "publicationDate": "April 1, 2025",
+    "sector": "Education",
+    "url": ""
+}

@@ -1,0 +1,1 @@
+{'projectName': 'Preston High School – New Building Construction Project', 'entityName': 'Preston High School', 'url': '', 'description': 'Design and construction of a new educational building to support academic growth and modern learning environments.', 'publicationDate': 'April 1, 2025', 'deadlineDate': 'May 1, 2025', 'sector': 'Education', 'deadlineData': ''}
