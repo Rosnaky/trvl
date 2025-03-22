@@ -41,7 +41,7 @@ class CohereAPI:
 
         docs = self.retriever.invoke(prompt, k=num_documents)
 
-        print(docs)
+        # print(docs)
 
         # docs_text = (d.page_content for d in docs)
 
