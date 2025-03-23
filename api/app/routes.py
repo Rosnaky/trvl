@@ -245,6 +245,56 @@ def generate_trip():
     #### trip_data = asyncio.run(op.main(data["city"], data["curr_location"]))
     #### print(trip_data)
 
+    parsed_data = [json.loads(item) for item in data]
+
+    # Initialize empty lists
+    events = []
+    hotels = []
+    restaurants = []
+    flights = []
+
+    # Extract data
+    for entry in parsed_data:
+        events.extend(entry.get("events", []))
+        hotels.extend(entry.get("hotels", []))
+        restaurants.extend(entry.get("restaurants", []))
+        flights.extend(entry.get("flights", []))
+
+    for event in events:
+        try: 
+            text = event["raw_info"] + f"latitude:  longitude:  eventUrl: {event["url"]}"
+            cohere_model.add_document(data=text)
+            print(f"  - {event['raw_info']} (Location: {event['address']}) | {event['url']}")
+        except:
+            pass
+
+    for hotel in hotels:
+        try:
+            text = hotel["raw_info"] + f"latitude:  longitude:  hotelUrl: {hotel["url"]}"
+            cohere_model.add_document(data=text)
+
+            print(f"  - {hotel['raw_info']} (Location: {hotel['address']}) | {hotel['url']}")
+        except:
+            pass
+
+    for restaurant in restaurants:
+        try:
+            text = restaurant["raw_info"] + f"latitude:  longitude:  restaurantUrl: {restaurant["url"]}"
+            cohere_model.add_document(data=text)
+
+            print(f"  - {restaurant['raw_info']} (Location: {restaurant['address']}) | {restaurant['url']}")
+        except:
+            pass
+
+    for flight in flights:
+        try:
+            text = restaurant["raw_info"] + f"departure_location:  longitude:  restaurantUrl: {restaurant["url"]}"
+            cohere_model.add_document(data=text)
+            
+            print(f"  - {flight['raw_info']} (Departure: {flight.get('departure_location', 'Unknown')}) | {flight['url']}")
+        except:
+            pass
+
     # find num_docs by calculating substrings of data['start_date'] and data['end_date'], num_docs = num_days * 10
     start_date = datetime.strptime(data['start_date'], '%m%d%Y')
     end_date = datetime.strptime(data['end_date'], '%m%d%Y')
