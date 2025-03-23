@@ -4,3 +4,8 @@ Flask-SQLAlchemy
 Flask-Migrate
 psycopg2-binary
 cohere
+langchain_cohere
+langchain_pinecone
+langchain_cohere
+pydantic
+python-dotenv
