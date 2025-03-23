@@ -88,6 +88,7 @@ Total volume of tanks: 5,700,000 litres (1,506,000 US gal)"""
     res = model.retrieve_documents(
         # context=sys_prompt,
         prompt=human_prompt + actual_prompt,
+        curr_pos={"latitude": 43.644204, "longitude": -79.387883},
         num_documents=2
     )
 

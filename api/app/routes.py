@@ -135,7 +135,7 @@ def generate_trip():
         prompt = f"{data['city']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}."
     prompt = base_prompt + prompt
 
-    search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": 43, "longitude": -75}, num_documents=num_docs)
+    search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": 43.644204, "longitude": -79.387883}, num_documents=num_docs)
 
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),
