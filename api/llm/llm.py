@@ -93,6 +93,7 @@ class CohereAPI:
                 "description": "A very short description of the event, about 30 words."
                 "latitude": "The latitude coordinates of the location. Must be a single floating point number."
                 "longitude": "The longitude coordinates of the location. Must be a single floating point number."
+                "departure_location": "The departure location of a flight. If it is not a flight, this will be empty"
             }
 
             - If a field is missing in the text, set it to an empty string (`""`) instead of `null`.
@@ -127,6 +128,7 @@ class CohereAPI:
             data.setdefault("max_cost", "")
             data["latitude"] = str(data.get("latitude", "-1"))
             data["longitude"] = str(data.get("longitude", "-1"))
+            data.setdefault("departure_location", "")
 
             # with open("a.txt", "w") as f:
             #     f.write(str(data))
