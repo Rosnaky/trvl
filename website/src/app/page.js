@@ -8,23 +8,25 @@ import Link from "next/link";
 export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [autoCompVis, setAutoCompVis] = useState(false);
-  const [slide, setSlide] = useState(0);
+  const [slide, setSlide] = useState(10);
   const [validPlace, setValidPlace] = useState(false);
 
   const carouselScroll = (dir) => {
     const car = document.getElementById("carousel").children[0];
-    if(dir == 1) {
-      let child = car.children[0];
-      car.removeChild(child);
-      car.appendChild(child);
-    }
-    else {
-      let child = car.children[car.children.length-1];
-      car.removeChild(child);
-      car.insertBefore(child, car.children[0]);
-    }
-    setSlide((slide+dir)%5);
+    // if(dir == 1) {
+    //   let child = car.children[0];
+    //   car.removeChild(child);
+    //   car.appendChild(child);
+    // }
+    // else {
+    //   let child = car.children[car.children.length-1];
+    //   car.removeChild(child);
+    //   car.insertBefore(child, car.children[0]);
+    // }
+    setSlide(slide+dir);
   }
+
+  console.log(slide)
 
   const locations = [
         {
@@ -66,7 +68,207 @@ export default function Home() {
             "price": 185,
             "image": "https://www.usatoday.com/gcdn/authoring/authoring-images/2024/08/14/USAT/74794361007-36472-credit-fr-loic-romer-tourisme-montreal-en-credit-loic-romer-tourisme-montreal.jpg",
             "id": 4,
-        }
+        },
+        {
+          "city": "Paris",
+          "country": "France",
+          "people": 3,
+          "price": 325,
+          "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg",
+          "id": 0,
+      },
+      {
+          "city": "Barcelona",
+          "country": "Spain",
+          "people": 5,
+          "price": 400,
+          "image": "https://www.odysseys-unlimited.com/wp-content/uploads/2023/05/AdobeStock_102733741-scaled.jpeg",
+          "id": 1,
+      },
+      {
+          "city": "Florence",
+          "country": "Italy",
+          "people": 2,
+          "price": 250,
+          "image": "https://cdn.britannica.com/59/179059-050-62BD6102/Cathedral-of-Santa-Maria-del-Fiore-Florence.jpg",
+          "id": 2,
+      },
+      {
+          "city": "Anchorage",
+          "country": "United States",
+          "people": 7,
+          "price": 834,
+          "image": "https://res.cloudinary.com/simpleview/image/upload/v1551922247/clients/anchorage/Aurora_Camp_JodyO_Photos_77ea0fae-bf4c-43be-a827-1ef25ac9c2fb.jpg",
+          "id": 3,
+      },
+      {
+          "city": "Montreal",
+          "country": "Canada",
+          "people": 4,
+          "price": 185,
+          "image": "https://www.usatoday.com/gcdn/authoring/authoring-images/2024/08/14/USAT/74794361007-36472-credit-fr-loic-romer-tourisme-montreal-en-credit-loic-romer-tourisme-montreal.jpg",
+          "id": 4,
+      },
+      {
+        "city": "Paris",
+        "country": "France",
+        "people": 3,
+        "price": 325,
+        "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg",
+        "id": 0,
+    },
+    {
+        "city": "Barcelona",
+        "country": "Spain",
+        "people": 5,
+        "price": 400,
+        "image": "https://www.odysseys-unlimited.com/wp-content/uploads/2023/05/AdobeStock_102733741-scaled.jpeg",
+        "id": 1,
+    },
+    {
+        "city": "Florence",
+        "country": "Italy",
+        "people": 2,
+        "price": 250,
+        "image": "https://cdn.britannica.com/59/179059-050-62BD6102/Cathedral-of-Santa-Maria-del-Fiore-Florence.jpg",
+        "id": 2,
+    },
+    {
+        "city": "Anchorage",
+        "country": "United States",
+        "people": 7,
+        "price": 834,
+        "image": "https://res.cloudinary.com/simpleview/image/upload/v1551922247/clients/anchorage/Aurora_Camp_JodyO_Photos_77ea0fae-bf4c-43be-a827-1ef25ac9c2fb.jpg",
+        "id": 3,
+    },
+    {
+        "city": "Montreal",
+        "country": "Canada",
+        "people": 4,
+        "price": 185,
+        "image": "https://www.usatoday.com/gcdn/authoring/authoring-images/2024/08/14/USAT/74794361007-36472-credit-fr-loic-romer-tourisme-montreal-en-credit-loic-romer-tourisme-montreal.jpg",
+        "id": 4,
+    },
+    {
+      "city": "Paris",
+      "country": "France",
+      "people": 3,
+      "price": 325,
+      "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg",
+      "id": 0,
+  },
+  {
+      "city": "Barcelona",
+      "country": "Spain",
+      "people": 5,
+      "price": 400,
+      "image": "https://www.odysseys-unlimited.com/wp-content/uploads/2023/05/AdobeStock_102733741-scaled.jpeg",
+      "id": 1,
+  },
+  {
+      "city": "Florence",
+      "country": "Italy",
+      "people": 2,
+      "price": 250,
+      "image": "https://cdn.britannica.com/59/179059-050-62BD6102/Cathedral-of-Santa-Maria-del-Fiore-Florence.jpg",
+      "id": 2,
+  },
+  {
+      "city": "Anchorage",
+      "country": "United States",
+      "people": 7,
+      "price": 834,
+      "image": "https://res.cloudinary.com/simpleview/image/upload/v1551922247/clients/anchorage/Aurora_Camp_JodyO_Photos_77ea0fae-bf4c-43be-a827-1ef25ac9c2fb.jpg",
+      "id": 3,
+  },
+  {
+      "city": "Montreal",
+      "country": "Canada",
+      "people": 4,
+      "price": 185,
+      "image": "https://www.usatoday.com/gcdn/authoring/authoring-images/2024/08/14/USAT/74794361007-36472-credit-fr-loic-romer-tourisme-montreal-en-credit-loic-romer-tourisme-montreal.jpg",
+      "id": 4,
+  },
+  {
+    "city": "Paris",
+    "country": "France",
+    "people": 3,
+    "price": 325,
+    "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg",
+    "id": 0,
+},
+{
+    "city": "Barcelona",
+    "country": "Spain",
+    "people": 5,
+    "price": 400,
+    "image": "https://www.odysseys-unlimited.com/wp-content/uploads/2023/05/AdobeStock_102733741-scaled.jpeg",
+    "id": 1,
+},
+{
+    "city": "Florence",
+    "country": "Italy",
+    "people": 2,
+    "price": 250,
+    "image": "https://cdn.britannica.com/59/179059-050-62BD6102/Cathedral-of-Santa-Maria-del-Fiore-Florence.jpg",
+    "id": 2,
+},
+{
+    "city": "Anchorage",
+    "country": "United States",
+    "people": 7,
+    "price": 834,
+    "image": "https://res.cloudinary.com/simpleview/image/upload/v1551922247/clients/anchorage/Aurora_Camp_JodyO_Photos_77ea0fae-bf4c-43be-a827-1ef25ac9c2fb.jpg",
+    "id": 3,
+},
+{
+    "city": "Montreal",
+    "country": "Canada",
+    "people": 4,
+    "price": 185,
+    "image": "https://www.usatoday.com/gcdn/authoring/authoring-images/2024/08/14/USAT/74794361007-36472-credit-fr-loic-romer-tourisme-montreal-en-credit-loic-romer-tourisme-montreal.jpg",
+    "id": 4,
+},
+{
+  "city": "Paris",
+  "country": "France",
+  "people": 3,
+  "price": 325,
+  "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg",
+  "id": 0,
+},
+{
+  "city": "Barcelona",
+  "country": "Spain",
+  "people": 5,
+  "price": 400,
+  "image": "https://www.odysseys-unlimited.com/wp-content/uploads/2023/05/AdobeStock_102733741-scaled.jpeg",
+  "id": 1,
+},
+{
+  "city": "Florence",
+  "country": "Italy",
+  "people": 2,
+  "price": 250,
+  "image": "https://cdn.britannica.com/59/179059-050-62BD6102/Cathedral-of-Santa-Maria-del-Fiore-Florence.jpg",
+  "id": 2,
+},
+{
+  "city": "Anchorage",
+  "country": "United States",
+  "people": 7,
+  "price": 834,
+  "image": "https://res.cloudinary.com/simpleview/image/upload/v1551922247/clients/anchorage/Aurora_Camp_JodyO_Photos_77ea0fae-bf4c-43be-a827-1ef25ac9c2fb.jpg",
+  "id": 3,
+},
+{
+  "city": "Montreal",
+  "country": "Canada",
+  "people": 4,
+  "price": 185,
+  "image": "https://www.usatoday.com/gcdn/authoring/authoring-images/2024/08/14/USAT/74794361007-36472-credit-fr-loic-romer-tourisme-montreal-en-credit-loic-romer-tourisme-montreal.jpg",
+  "id": 4,
+},  
   ]
   
   async function autocomplete(newVal) {
@@ -141,23 +343,24 @@ export default function Home() {
           </div>
         </div>
         <div className="overflow-hidden flex flex-grow justify-between items-center gap-10 mt-4 w-1/1">
-          <div onClick={() => {setTimeout(function(){carouselScroll(-1)}, 300); /**setSlide(true)**/}} className="group hover:cursor-pointer hover:to-background/10 z-2 relative left-0 bg-linear-to-r from-background to-background/0 h-1/1 w-1/8 min-w-10">
+          <div onClick={() => {setTimeout(function(){carouselScroll(-1)}, 0); /**setSlide(true)**/}} className="group hover:cursor-pointer hover:to-background/10 z-2 relative left-0 bg-linear-to-r from-background to-background/0 h-1/1 w-1/8 min-w-10">
             <div className="flex h-1/1 w-1/1 justify-center items-center">
               <Image width="35" height="35" stroke="black" src={"/chevron-left.svg"} alt="" className="z-2 flex min-h-7 h-1/7 opacity-50 group-hover:scale-105 group-hover:opacity-100 transition duration-200"/>
             </div>
           </div>
 
-          <div className="relative h-1/1 w-1/1">
-            <div id="carousel" className={`absolute -left-200 -right-200 -translate-x-${slide}/5 top-0 bottom-0 transition ease-in-out duration-300`}>
-              <div className="flex flex-row justify-center items-center gap-10 h-1/1">
-                {locations.map((location) => {
-                    return <EventTile city={location.city} country={location.country} image={location.image} price={location.price} people={location.people} key={location.id}/>
+          <div className="relative h-1/1">
+            <div id="carousel" className={`absolute -left-200 -right-200 top-0 bottom-0 transition ease-in-out duration-300`}
+              style={{transform: `translateX(-${slide * 290}px)`}}>
+              <div className="flex flex-row justify-center items-center gap-10 h-1/1 w-[600%]">
+                {locations.map((location, idx) => {
+                    return <EventTile city={location.city} country={location.country} image={location.image} price={location.price} people={location.people} key={idx}/>
                 })}
               </div>
             </div>
           </div>
 
-          <div onClick={() => {setTimeout(function(){carouselScroll(1)}, 300); /**setSlide(true)**/}} className="group hover:cursor-pointer hover:to-background/10 z-2 relative left-0 bg-linear-to-l from-background to-background/0 h-1/1 w-1/8 min-w-10">
+          <div onClick={() => {setTimeout(function(){carouselScroll(1)}, 0); /**setSlide(true)**/}} className="group hover:cursor-pointer hover:to-background/10 z-2 relative left-0 bg-linear-to-l from-background to-background/0 h-1/1 w-1/8 min-w-10">
             <div className="flex h-1/1 w-1/1 justify-center items-center">
               <Image width="35" height="35" stroke="red" src={"/chevron-right.svg"} alt="" className="z-2 flex min-h-7 h-1/7 opacity-50 group-hover:scale-105 group-hover:opacity-100 transition duration-200"/>
             </div>

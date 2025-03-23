@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+
 
 const Step0 = () => {
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState(localStorage.getItem("cityNameOrigin") || "");
     const [autoCompVis, setAutoCompVis] = useState(false);
 
     async function autocomplete(newVal) {
@@ -64,7 +64,7 @@ const Step0 = () => {
 
     return (
         <div className="mt-20">
-                <Link href={"/home"}>
+                <Link href={"/"}>
                     <button
                         className="ml-30 mb-10 text-ui px-8 py-2 rounded-lg border-white cursor-pointer hover:bg-[#f4f4f420] transition-all"
                     >
@@ -91,10 +91,6 @@ const Step0 = () => {
                     </button>
                 </Link>
             </div>
-            {/* <Link href="/build/step1/" className={`${localStorage.getItem("latLongDest")[0] != -1 ? "group hover:cursor-pointer" : ""} absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 h-1/1`}>
-                <div className="absolute left-0 right-full group-hover:right-0 h-1/1 bg-foreground transition-right duration-500 ease-in-out"></div>
-                <Image width="20" height="20" stroke="white" src={"/search.svg"} alt="" className="absolute left-3/10 right-1/5 group-hover:scale-110 transition h-3/5 mt-1.5"/>
-            </Link> */}
         </div>
     )
 }

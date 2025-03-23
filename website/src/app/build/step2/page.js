@@ -4,14 +4,15 @@ import { useState } from "react"
 import Link from "next/link"
 
 const Step2 = () => {
-    const [selected, setSelected] = useState(null)
-
     const options = [
-        "Alone", "With SO", "Friends", "Family"
+        ["Alone 😔", 1],
+        ["With SO 💑", 2],
+        ["Friends 👥", 6],
+        ["Family 👪", 4]
     ]
 
-    console.log(selected);
-
+    const [selected, setSelected] = useState(options.find(([option, numPeople]) => numPeople === parseInt(localStorage.getItem("numPeople")))?.[0] || null)
+    
     return (
         <div className="mt-20">
             <Link href={"/build/step1"}>
@@ -24,13 +25,13 @@ const Step2 = () => {
             <h2 className="text-4xl text-black text-center w-screen text-ui font-bold">Who?</h2>
             <div className="flex gap-4 w-1/2 mx-auto mt-10 justify-around">
             {
-                options.map((option) => {
+                options.map(([option, numPeople]) => {
                     return <div 
                         key={option}
-                        className={"w-36 h-24 my-auto border border-ui flex justify-center items-center text-ui rounded-lg cursor-pointer hover:bg-ui/10" + (selected === option ? " bg-ui/20" : " bg-transparent")}
+                        className={"w-36 py-6 my-auto border border-ui flex justify-center items-center text-ui rounded-lg cursor-pointer hover:bg-white/10" + (selected === option ? " bg-white/20" : " bg-transparent")}
                         onClick={() => {
                             setSelected(selected === option ? null : option)
-                            localStorage.setItem("numPeople", option)
+                            localStorage.setItem("numPeople", numPeople)
                         }}>
                             <p>{option}</p>
                     </div>
@@ -38,7 +39,12 @@ const Step2 = () => {
             }
             </div>
             <div className={"w-1/1 items-center justify-center flex flex-row"}>
-                <Link href={"/build/step3"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-ui cursor-pointer mt-10">I'm flexible</Link>
+                <Link href={"/build/step3"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-ui cursor-pointer mt-10"
+                    onClick={() => {
+                        localStorage.setItem("numPeople", null)
+                    }}>
+                        I'm flexible
+                </Link>
             </div>
             <div className="flex flex-row-reverse w-1/2 mx-auto mt-10">
                 <Link href={"/build/step3"}>
