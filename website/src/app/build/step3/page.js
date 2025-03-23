@@ -14,22 +14,12 @@ const Step2 = () => {
 
     return (
         <div className="mt-20">
-            <h2 className="text-4xl text-black text-center w-screen text-white font-bold">Who?</h2>
+            <h2 className="text-4xl text-black text-center w-screen text-white font-bold">Anything Else?</h2>
             <div className="flex gap-4 w-1/2 mx-auto mt-10 justify-around">
-            {
-                options.map((option) => {
-                    return <div 
-                        key={option}
-                        className={"w-36 h-24 my-auto border border-white flex justify-center items-center text-white rounded-lg cursor-pointer" + (selected === option ? " bg-white/10" : " bg-transparent")}
-                        onClick={() => setSelected(option)}>
-                            <p>{option}</p>
-                    </div>
-                })
-            }
+                <textarea />
             </div>
-            <p className="text-center text-white cursor-pointer mt-10">I'm flexible</p>
             <div className="flex flex-row-reverse w-1/2 mx-auto mt-10">
-                <Link href="/build/step3">
+                <Link href="/build/step2">
                     <button
                         className="border border-white w-40 h-8 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
                         style={{ transition: "opacity 0.5s ease-in", opacity: selected ? 1 : 0 }}

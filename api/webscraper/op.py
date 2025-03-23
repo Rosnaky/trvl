@@ -1,7 +1,7 @@
 import json
 from langchain_google_genai import ChatGoogleGenerativeAI
 from browser_use import Agent, Controller
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 import os
 import asyncio
@@ -32,7 +32,7 @@ class RestaurantData(BaseModel):
 class FlightData(BaseModel):
     raw_info: str  # Block of text for flights
     url: str
-    departure_location: str
+    departure_location: str = Field("The city name of the departure location of the flight.")
 
 class FinalData(BaseModel):
     events: list[EventData]
@@ -144,9 +144,9 @@ async def main(location, curr_location):
     res = [events, hotels, restaurants, flights]
 
     # Print the raw results
-    # print(
-    #     res
-    # )
+    print(
+        res
+    )
 
     return res
 
