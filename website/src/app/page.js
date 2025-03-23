@@ -9,6 +9,7 @@ export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [autoCompVis, setAutoCompVis] = useState(false);
   const [slide, setSlide] = useState(0);
+  const [validPlace, setValidPlace] = useState(false);
 
   const carouselScroll = (dir) => {
     const car = document.getElementById("carousel").children[0];
@@ -94,7 +95,7 @@ export default function Home() {
           let newChild = document.createElement("div");
           newChild.className = "min-h-7 pl-3 align-items text-gray-400 hover:bg-gray-100 hover:cursor-pointer";
           let text = `${json.results[i].city}, ${json.results[i].state}, ${json.results[i].country}`;
-          newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false); localStorage.setItem("latLongDest", [json.results[i].lat, json.results[i].lon])});
+          newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false); localStorage.setItem("latLongDest", [json.results[i].lat, json.results[i].lon]); setValidPlace(true)});
           newChild.appendChild(document.createTextNode(text))
           autocomp.appendChild(newChild);
         }
@@ -129,10 +130,10 @@ export default function Home() {
         <div className="relative flex-col justify-center items-center">
           <div className="ml-auto mr-auto w-1/1 max-w-200 justify-center">
             <div className="overflow-hidden flex-row relative min-h-10 rounded-xl bg-white items-center border-1 border-gray-400 shadow-xl ring-black-800">
-              <input onBlur={(e) => {setTimeout(function(){setAutoCompVis(false)}, 300)}} onFocus={(e) => {setAutoCompVis(true); autocomplete(searchText)}} value={searchText} onChange={(e) => {setAutoCompVis(true); autocomplete(e.target.value);}} placeholder={"Where to next?"} className="border-0 text-gray-600 outline-0 mt-1.5 absolute left-1/40 right-3/20"></input>
-              <Link href="/build/step0" className="group absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 hover:cursor-pointer h-1/1">
+              <input onBlur={(e) => {setTimeout(function(){setAutoCompVis(false)}, 300)}} onFocus={(e) => {setAutoCompVis(true); autocomplete(searchText)}} value={searchText} onChange={(e) => {setAutoCompVis(true); autocomplete(e.target.value); setValidPlace(false);}} placeholder={"Where to next?"} className="border-0 text-gray-600 outline-0 mt-1.5 absolute left-1/40 right-3/20"></input>
+              <Link href={validPlace ? "/build/step0" : "/"} className={`hover:cursor-default absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 ${validPlace ? "hover:cursor-pointer group" : ""} h-1/1`}>
                 <div className="absolute left-0 right-full group-hover:right-0 h-1/1 bg-foreground transition-right duration-500 ease-in-out"></div>
-                <Image width="20" height="20" stroke="white" src={"/search.svg"} alt="" className="absolute left-3/10 right-1/5 group-hover:scale-110 transition h-3/5 mt-1.5"/>
+                <Image width="20" height="20" stroke="white" src={"/arrow-right.svg"} alt="" className="absolute left-3/10 right-1/5 group-hover:scale-110 transition h-3/5 mt-1.5"/>
               </Link>
             </div>
             <div id="autocomplete_container" className={`z-5 overflow-hidden text-gray-400 absolute bg-white w-1/1 max-w-200 rounded-xl border-1 border-gray-300 shadow-xl ring-black-800 ${autoCompVis ? "visible" : "invisible"}`}>
