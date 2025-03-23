@@ -315,7 +315,7 @@ def generate_trip():
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
     
-    required_params = ['city', 'start_date', 'end_date', 'min_budget', 'max_budget', 'curr_location']
+    required_params = ['cityNameDest', 'start_date', 'end_date', 'min_budget', 'max_budget', 'cityNameOrigin']
 
     for param in required_params:
         if param not in data:
@@ -327,7 +327,7 @@ def generate_trip():
     )
     db.session.add(new_trip_request)
 
-    trip_data = asyncio.run(op.main(data["city"], data["curr_location"]))
+    trip_data = asyncio.run(op.main(data["cityNameDest"], data["cityNameOrigin"]))
     print(trip_data)
 
     # return jsonify(trip_data), 201
@@ -395,22 +395,27 @@ def generate_trip():
     # Initialize the Google Maps client
     gmaps = googlemaps.Client(key=GOOGLEMAPS_API_KEY)
     # Address to convert
-    address = data['city']
-    # Geocoding the address
-    geocode_result = gmaps.geocode(address)
-    # Extracting latitude and longitude
-    if geocode_result:
-        latitude = geocode_result[0]['geometry']['location']['lat']
-        longitude = geocode_result[0]['geometry']['location']['lng']
-    else:
-        latitude = 45.5307272
-        longitude = -73.6161212
-    
+    # address = data['cityNameDest']
+    # # Geocoding the address
+    # geocode_result = gmaps.geocode(address)
+    # # Extracting latitude and longitude
+    # if geocode_result:
+    #     latitude = geocode_result[0]['geometry']['location']['lat']
+    #     longitude = geocode_result[0]['geometry']['location']['lng']
+    # else:
+    #     latitude = 45.5307272
+    #     longitude = -73.6161212
+
+
+    latitude = data["latLongDest"].split(", ")[0]
+    longitude = data["latLongDest"].split(", ")[1]
+    # ^^ Replaces top
+
     base_prompt = "Given a user-specified location, return RELEVANT events (hotels, flights, restaurants, or activities) that are near the specified location. Prioritize options that are within a reasonable distance (e.g., same city, nearby town, or accessible within a short travel time). Ensure diversity by including a mix of hotels, flights, restaurants, and activities. DO NOT BE BAD, GIVE ONLY EVENTS THAT ARE NEARBY. LOCATION MATTERS. You must spread out the opening hours so all these attractions can be visited through the given date range."
-    if 'additional_info' in data:
-        prompt = f"{data['city']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}. Targetted with these additional information: {data['additional_info']}"
+    if 'additionalInfo' in data:
+        prompt = f"{data['cityNameDest']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}. Targetted with these additional information: {data['additional_info']}"
     else:
-        prompt = f"{data['city']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}."
+        prompt = f"{data['cityNameDest']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}."
     prompt = base_prompt + prompt
 
     search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": latitude, "longitude": longitude}, num_documents=num_docs)
