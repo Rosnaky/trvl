@@ -78,8 +78,8 @@ async def fetch_data_for_category_2(category: str, prompt: str):
         prompt,
         llm=llm2,
         controller=controller,
-        max_failures=3,
-        retry_delay=20,
+        max_failures=2,
+        retry_delay=10,
     )
     result = await agent.run()
     final_result = result.final_result()
@@ -93,8 +93,8 @@ async def fetch_data_for_category_3(category: str, prompt: str):
         prompt,
         llm=llm3,
         controller=controller,
-        max_failures=3,
-        retry_delay=20
+        max_failures=2,
+        retry_delay=10
     )
     result = await agent.run()
     final_result = result.final_result()
@@ -108,8 +108,8 @@ async def fetch_data_for_category_4(category: str, prompt: str):
         prompt,
         llm=llm4,
         controller=controller,
-        max_failures=3,
-        retry_delay=20
+        max_failures=2,
+        retry_delay=10
     )
     result = await agent.run()
     final_result = result.final_result()

@@ -351,7 +351,7 @@ def generate_trip():
         try: 
             text = event["raw_info"] + f"latitude:  longitude:  eventUrl: {event["url"]}"
             cohere_model.add_document(data=text)
-            print(f"  - {event['raw_info']} (Location: {event['address']}) | {event['url']}")
+            # print(f"  - {event['raw_info']} (Location: {event['address']}) | {event['url']}")
         except:
             pass
 
@@ -360,7 +360,7 @@ def generate_trip():
             text = hotel["raw_info"] + f"latitude:  longitude:  hotelUrl: {hotel["url"]}"
             cohere_model.add_document(data=text)
 
-            print(f"  - {hotel['raw_info']} (Location: {hotel['address']}) | {hotel['url']}")
+            # print(f"  - {hotel['raw_info']} (Location: {hotel['address']}) | {hotel['url']}")
         except:
             pass
 
@@ -369,7 +369,7 @@ def generate_trip():
             text = restaurant["raw_info"] + f"latitude:  longitude:  restaurantUrl: {restaurant["url"]}"
             cohere_model.add_document(data=text)
 
-            print(f"  - {restaurant['raw_info']} (Location: {restaurant['address']}) | {restaurant['url']}")
+            # print(f"  - {restaurant['raw_info']} (Location: {restaurant['address']}) | {restaurant['url']}")
         except:
             pass
 
@@ -378,7 +378,7 @@ def generate_trip():
             text = restaurant["raw_info"] + f"departure_location:  longitude:  restaurantUrl: {restaurant["url"]}"
             cohere_model.add_document(data=text)
             
-            print(f"  - {flight['raw_info']} (Departure: {flight.get('departure_location', 'Unknown')}) | {flight['url']}")
+            # print(f"  - {flight['raw_info']} (Departure: {flight.get('departure_location', 'Unknown')}) | {flight['url']}")
         except:
             pass
 
@@ -389,7 +389,7 @@ def generate_trip():
     # Calculate the difference in days
     num_days = (end_date - start_date).days
 
-    num_docs = num_days * 10
+    num_docs = num_days * 2
 
     ### ADDRESS TO LATITUDE AND LONGITUDE
     # Initialize the Google Maps client
@@ -406,7 +406,7 @@ def generate_trip():
         latitude = 45.5307272
         longitude = -73.6161212
     
-    base_prompt = "Given a user-specified location, return RELEVANT events (hotels, flights, restaurants, or activities) that are near the specified location. Prioritize options that are within a reasonable distance (e.g., same city, nearby town, or accessible within a short travel time). Ensure diversity by including a mix of hotels, flights, restaurants, and activities. DO NOT BE BAD, GIVE ONLY EVENTS THAT ARE NEARBY. LOCATION MATTERS. You must spread out the opening hours so all these attractions can be visited through the given date range."
+    base_prompt = "Given a user-specified location, return RELEVANT events (hotels, flights, restaurants, or activities) that are near the specified location. Ensure diversity by including a mix of hotels, flights, restaurants, and activities. DO NOT BE BAD, GIVE ONLY EVENTS THAT ARE NEARBY. LOCATION MATTERS. You must spread out the opening hours so all these attractions can be visited through the given date range."
     if 'additional_info' in data:
         prompt = f"{data['city']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}. Targetted with these additional information: {data['additional_info']}"
     else:
@@ -415,12 +415,21 @@ def generate_trip():
 
     search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": latitude, "longitude": longitude}, num_documents=num_docs)
 
-    combine_prompt = f"Given the following attraction data: create an itinerary of {num_days} days starting from {data['start_date']} to {data['end_date']}. Fit all the costs within {data['min_budget']} and {data['max_budget']}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the JSON format: above. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT. - Ensure the output is valid JSON and does not contain extra explanations. - Do NOT prepend the data with the word json - The first character MUST be " + "{ STOP BEING BAD"
+    combine_prompt = f"Given the following attraction data: create an itinerary of {num_days} days starting from {data['start_date']} to {data['end_date']}. Fit all the costs within {data['min_budget']} and {data['max_budget']}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the JSON format: above. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT. - Ensure the output is valid JSON and does not contain extra explanations. - Do NOT prepend the data with the word json - The first character MUST be " + "{ DO NOT CHANGE THE DOCUMENT CONTENT. DO NOT CHANGE THE DOCUMENT CONTENT AND MISS METADATA. YOU MUST include eventName, minCost, maxCost, sector, openingHours, location, latitude, longitude, and description. DO NOT CHANGE THE DOCUMENT CONTENT."
 
     documents = ["actual attraction data: " + json.dumps(search_results), "fake format data DO NOT USE: " + json.dumps(output_format)]
 
     response = cohere_model.send_prompt(combine_prompt, documents)
-    response = response[response.index("{"):response.index("`", 4)]
+    print(response)
+    try:
+
+        response = response[response.index("{"):]
+        response = response[:response.index("`", 4)]
+        response = response.replace("\n", "")
+    except:
+        # return jsonify({'error': 'No response from Cohere'}), 500
+        pass
+        
     print(response)
 
     new_intinerary = Itinerary(
