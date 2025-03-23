@@ -68,7 +68,6 @@ const Step3 = () => {
                     <img src='/chevron-left.svg' className="inline h-4 mb-0.5"/> Back 
                 </button>
             </Link>
-            <h2 className="text-4xl text-black text-center w-screen text-white font-bold">Anything Else?</h2>
             <h2 className="text-4xl text-black text-center w-screen text-ui font-bold">Anything Else?</h2>
             <div className="flex gap-4 w-1/2 mx-auto mt-10 justify-around">
                 <textarea
