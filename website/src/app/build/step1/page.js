@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react";
-
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import './calendar.css'
@@ -9,8 +8,6 @@ import Link from "next/link";
 
 const Step1 = () => {
     const [selected, setSelected] = useState(false);
-
-    console.log(selected)
 
     return (
         <div className="flex flex-col mt-20">
@@ -28,10 +25,10 @@ const Step1 = () => {
                 />
             </div>
             <div className={"w-1/1 items-center justify-center flex flex-row"}>
-                <Link href="/build/step2" className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10">I'm flexible</Link>
+                <Link href={"/build/step2"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10">I'm flexible</Link>
             </div>
             <div className="flex flex-row-reverse w-1/2 mx-auto mt-10">
-            <Link href="/build/step2">
+            <Link href={"/build/step2"}>
                 <button
                     className="border border-white w-40 h-8 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
                     style={{ transition: "opacity 0.5s ease-in", opacity: selected ? 1 : 0 }}

@@ -29,22 +29,13 @@ const Step0 = () => {
                     if(json.results[i].city == autocomp.children[j].city && json.results[i].state == autocomp.children[j].state && json.results[i].country == autocomp.children[j].country) {
                     continue;
                     }
-                    else {
-                    console.log(json.results[i].city);
-                    console.log(autocomp.children[j].city);
-                    console.log(json.results[i].state);
-                    console.log(autocomp.children[j].state);
-                    console.log(json.results[i].country);
-                    console.log(autocomp.children[j].country);
-                    }
                 }
                 }
                 let newChild = document.createElement("div");
                 newChild.className = "min-h-7 pl-3 align-items text-gray-400 hover:bg-gray-100 hover:cursor-pointer";
                 let text = `${json.results[i].city}, ${json.results[i].state}, ${json.results[i].country}`;
-                newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false);});
-                newChild.appendChild(document.createTextNode(text));
-                newChild.hiddenData = [json.results[i].lat, json.results[i].lon];
+                newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false); /**searchParams.append("latLong2", [json.results[i].lat, json.results[i].lon])**/});
+                newChild.appendChild(document.createTextNode(text))
                 autocomp.appendChild(newChild);
             }
             }
@@ -55,13 +46,13 @@ const Step0 = () => {
         else {
             for(; autocomp.children.length != 0; autocomp.removeChild(autocomp.children[0]));
             if(newVal.length > 0) {
-            let newChild = document.createElement("div");
-            newChild.className = "min-h-7 pl-3 align-items text-gray-400";
-            newChild.appendChild(document.createTextNode("..."));
-            autocomp.appendChild(newChild);
+                let newChild = document.createElement("div");
+                newChild.className = "min-h-7 pl-3 align-items text-gray-400";
+                newChild.appendChild(document.createTextNode("..."));
+                autocomp.appendChild(newChild);
             }
             else {
-            setAutoCompVis(false);
+                setAutoCompVis(false);
             }
         }
     };
@@ -72,13 +63,13 @@ const Step0 = () => {
             <div className="relative flex-col justify-center items-center">
                 <div className="ml-auto mr-auto w-1/1 max-w-200 justify-center">
                     <div className="overflow-hidden flex-row relative min-h-10 rounded-xl bg-white items-center border-1 border-gray-400 shadow-xl ring-black-800">
-                        <input onBlur={(e) => {setTimeout(function(){setAutoCompVis(false)}, 300)}} onFocus={(e) => {setAutoCompVis(true); autocomplete(searchText)}} value={searchText} onChange={(e) => {setAutoCompVis(true); autocomplete(e.target.value);}} placeholder={"Where to next?"} className="border-0 text-gray-600 outline-0 mt-1.5 absolute left-1/40 right-3/20"></input>
-                        <Link href="/build/step1" className="group absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 hover:cursor-pointer h-1/1">
+                        <input onBlur={(e) => {setTimeout(function(){setAutoCompVis(false)}, 300)}} onFocus={(e) => {setAutoCompVis(true); autocomplete(searchText)}} value={searchText} onChange={(e) => {setAutoCompVis(true); autocomplete(e.target.value);}} placeholder={"I'm leaving from..."} className="border-0 text-gray-600 outline-0 mt-1.5 absolute left-1/40 right-3/20"></input>
+                        <Link onClick={() => {}} href={"/build/step1/" + searchParams} className={`${searchParams.get("latLong2")[0] != -1 ? "group hover:cursor-pointer" : ""} absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 h-1/1`}>
                             <div className="absolute left-0 right-full group-hover:right-0 h-1/1 bg-foreground transition-right duration-500 ease-in-out"></div>
                             <Image width="20" height="20" stroke="white" src={"/search.svg"} alt="" className="absolute left-3/10 right-1/5 group-hover:scale-110 transition h-3/5 mt-1.5"/>
                         </Link>
                     </div>
-                    <div id="autocomplete_container" className={`overflow-hidden text-gray-400 absolute bg-white w-1/1 max-w-200 rounded-xl border-1 border-gray-300 shadow-xl ring-black-800 ${autoCompVis ? "visible" : "invisible"}`}>
+                    <div id="autocomplete_container" className={`z-5 overflow-hidden text-gray-400 absolute bg-white w-1/1 max-w-200 rounded-xl border-1 border-gray-300 shadow-xl ring-black-800 ${autoCompVis ? "visible" : "invisible"}`}>
                     </div>
                 </div>
             </div>
