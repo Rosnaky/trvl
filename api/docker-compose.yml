@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:17.4
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    restart: on-failure:20
+
+  python_backend:
+    env_file:
+      - .env
+    build: .
+    ports:
+      - "${FLASK_RUN_PORT}:${FLASK_RUN_PORT}"
+    depends_on:
+      - postgres
+    restart: on-failure:20
+    init: true
+
+volumes:
+  postgres_data:
