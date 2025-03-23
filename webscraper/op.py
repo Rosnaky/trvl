@@ -1,3 +1,4 @@
+import json
 from langchain_google_genai import ChatGoogleGenerativeAI
 from browser_use import Agent, Controller
 from pydantic import BaseModel
@@ -43,16 +44,17 @@ class FinalData(BaseModel):
 controller = Controller(output_model=FinalData)
 
 # LLM setup for Google Gemini API
-llm1 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY_1)
-llm2 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY_2)
-llm3 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY_3)
-llm4 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY_4)
+llm1 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-001', api_key=GEMINI_API_KEY_1)
+llm2 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-001', api_key=GEMINI_API_KEY_2)
+llm3 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-001', api_key=GEMINI_API_KEY_3)
+llm4 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-001', api_key=GEMINI_API_KEY_4)
 
 # Rules for scraping and collecting the data
 rules = [
     "If you get a captcha, then don't scrape that website.",
     "If the specific query is not available, then leave the data field to its corresponding none type.",
     "Through blogs, TripAdvisor, or Google searches, and remember their descriptions.",
+    "Output VALID JSON DATA ONLY PLEASE OH MY GOD DO NOT HAVE JSON AT THE BEGINNING, THE FIRST CHARACTER MUST BE { YOU STUPID GEMINI!!!",
 ]
 rules = " ".join(rules)
 
@@ -66,7 +68,20 @@ async def fetch_data_for_category_1(category: str, prompt: str):
         retry_delay=20
     )
     result = await agent.run()
-    return result.final_result()
+    final_result = result.final_result()
+
+    print(final_result)
+
+
+    try:
+        data = json.loads(final_result)  # Assuming the result is a JSON string
+        if isinstance(data, list):
+            # Convert to list of FlightData
+            return [EventData(**item) for item in data]
+        else:
+            return []
+    except json.JSONDecodeError:
+        return []
 async def fetch_data_for_category_2(category: str, prompt: str):
     # Adjust the prompt for each category (hotels, events, restaurants, flights)
     agent = Agent(
@@ -77,7 +92,19 @@ async def fetch_data_for_category_2(category: str, prompt: str):
         retry_delay=20
     )
     result = await agent.run()
-    return result.final_result()
+    final_result = result.final_result()
+
+    print(final_result)
+
+    try:
+        data = json.loads(final_result)  # Assuming the result is a JSON string
+        if isinstance(data, list):
+            # Convert to list of FlightData
+            return [HotelData(**item) for item in data]
+        else:
+            return []
+    except json.JSONDecodeError:
+        return []
 async def fetch_data_for_category_3(category: str, prompt: str):
     # Adjust the prompt for each category (hotels, events, restaurants, flights)
     agent = Agent(
@@ -88,7 +115,19 @@ async def fetch_data_for_category_3(category: str, prompt: str):
         retry_delay=20
     )
     result = await agent.run()
-    return result.final_result()
+    final_result = result.final_result()
+
+    print(final_result)
+
+    try:
+        data = json.loads(final_result)  # Assuming the result is a JSON string
+        if isinstance(data, list):
+            # Convert to list of FlightData
+            return [RestaurantData(**item) for item in data]
+        else:
+            return []
+    except json.JSONDecodeError:
+        return []
 async def fetch_data_for_category_4(category: str, prompt: str):
     # Adjust the prompt for each category (hotels, events, restaurants, flights)
     agent = Agent(
@@ -99,7 +138,19 @@ async def fetch_data_for_category_4(category: str, prompt: str):
         retry_delay=20
     )
     result = await agent.run()
-    return result.final_result()
+    final_result = result.final_result()
+
+    print(final_result)
+
+    try:
+        data = json.loads(final_result)  # Assuming the result is a JSON string
+        if isinstance(data, list):
+            # Convert to list of FlightData
+            return [FlightData(**item) for item in data]
+        else:
+            return []
+    except json.JSONDecodeError:
+        return []
 
 async def main(location, curr_location):
     # Create separate prompts for each category
