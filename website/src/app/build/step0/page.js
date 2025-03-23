@@ -68,7 +68,7 @@ const Step0 = () => {
                     <button
                         className="ml-30 mb-10 text-white px-8 py-2 rounded-lg border-white cursor-pointer hover:bg-[#f4f4f420] transition-all"
                     >
-                        &lt;- Back 
+                    <img src='/chevron-left.svg' className="inline h-4 mb-0.5 -ml-1"/> Back 
                     </button>
                 </Link>
             <h2 className="text-4xl text-black text-center w-screen text-white font-bold mb-9">Where are you coming from?</h2>
@@ -87,7 +87,7 @@ const Step0 = () => {
                         className="border border-white px-8 py-2 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
                         style={{ transition: "opacity 0.5s ease-in", opacity: searchText.split(',').length === 3 ? 1 : 0 }}
                     >
-                        Next -&gt;
+                        Next <img src='/chevron-right.svg' className="inline h-4 mb-0.5 -mr-2"/>
                     </button>
                 </Link>
             </div>
