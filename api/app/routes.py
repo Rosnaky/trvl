@@ -331,8 +331,11 @@ def generate_trip():
     
 
     # return jsonify(trip_data), 201
-    trip_data = [item.replace("\\u", "") for item in trip_data]
-    trip_data = [item.replace("\\n", "") for item in trip_data]
+    try:
+        trip_data = [item.replace("\\u", "") for item in trip_data]
+        trip_data = [item.replace("\\n", "") for item in trip_data]
+    except:
+        pass
 
     print(trip_data)
 
@@ -393,7 +396,7 @@ def generate_trip():
     # Calculate the difference in days
     num_days = (end_date - start_date).days
 
-    num_docs = num_days * 2
+    num_docs = num_days * 3
 
     ### ADDRESS TO LATITUDE AND LONGITUDE
     # Initialize the Google Maps client
