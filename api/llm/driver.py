@@ -73,6 +73,7 @@ PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 #     res = model.retrieve_documents(
 #         # context=sys_prompt,
 #         prompt=human_prompt + actual_prompt,
+#         curr_pos={"latitude": 37.7749, "longitude": -122.4194},
 #         num_documents=2
 #     )
 
