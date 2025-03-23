@@ -79,12 +79,14 @@ const Step3 = () => {
                 />
             </div>
             <div className={"w-1/1 items-center justify-center flex flex-row"}>
+            <Link href={"/schedule"}>
                 <button
-                    onClick={handleSubmit}
                     className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10 hover:bg-[#f4f4f420] px-4 py-2 rounded-lg"
                 >
                     That's everything!
                 </button>
+            </Link>
+
             </div>
         </div>
     )
