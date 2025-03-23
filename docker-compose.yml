@@ -17,7 +17,7 @@ services:
   python_backend:
     env_file:
       - .env
-    build: .
+    build: ./api
     ports:
       - "${FLASK_RUN_PORT}:${FLASK_RUN_PORT}"
     depends_on:
