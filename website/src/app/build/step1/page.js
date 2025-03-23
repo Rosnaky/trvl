@@ -13,7 +13,7 @@ const Step1 = () => {
     console.log(selected)
 
     return (
-        <div className="mt-20">
+        <div className="flex flex-col mt-20">
             <h2 className="text-4xl text-black text-center w-screen text-white font-bold">When?</h2>
             <div className="mt-20">
                 <DayPicker
@@ -27,7 +27,9 @@ const Step1 = () => {
                     onSelect={setSelected}
                 />
             </div>
-            <p className="text-center text-white cursor-pointer mt-10">I'm flexible</p>
+            <div className={"w-1/1 items-center justify-center flex flex-row"}>
+                <Link href="/build/step2" className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10">I'm flexible</Link>
+            </div>
             <div className="flex flex-row-reverse w-1/2 mx-auto mt-10">
             <Link href="/build/step2">
                 <button
