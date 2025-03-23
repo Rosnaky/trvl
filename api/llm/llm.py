@@ -117,6 +117,13 @@ class CohereAPI:
 
     def parse_json(self, json_str: str):
         json_str = json_str.replace("\n", "")
+        try:
+
+            json_str = json_str[json_str.index("{"):]
+            json_str = json_str[:json_str.index("`", 4)]
+        except:
+            # return jsonify({'error': 'No response from Cohere'}), 500
+            pass
         # print(json_str)
         try:
             data = json.loads(json_str) 
