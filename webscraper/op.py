@@ -136,10 +136,10 @@ async def main(location, curr_location):
                          )
 
     # Gather results
-    events = events_task.result()["events"]
-    hotels = hotels_task.result()["hotels"]
-    restaurants = restaurants_task.result()["restaurants"]
-    flights = flights_task.result()["flights"]
+    events = events_task.result()
+    hotels = hotels_task.result()
+    restaurants = restaurants_task.result()
+    flights = flights_task.result()
 
     res = [events, hotels, restaurants, flights]
 
