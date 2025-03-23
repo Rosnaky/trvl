@@ -149,10 +149,11 @@ class CohereAPI:
         except:
             return 0.1
 
-    def send_prompt(self, prompt: str, max_tokens: int = 1024, temperature: float = 0) -> Dict[str, str]:
+    def send_prompt(self, prompt: str, documents: List = [], max_tokens: int = 2048, temperature: float = 0) -> Dict[str, str]:
         response = self.cohereModel.chat(
             model=self.model_name,
             messages=[{"role": "user", "content": prompt}],
+            documents=documents,
             max_tokens=max_tokens,
             temperature=temperature
         )
