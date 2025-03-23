@@ -7,7 +7,9 @@ import string
 import os
 from dotenv import load_dotenv
 from datetime import datetime
-
+import cohere
+import googlemaps
+import json
 from webscraper import op
 
 from llm.llm import CohereAPI
@@ -19,71 +21,189 @@ load_dotenv()
 
 COHERE_API_KEY = os.environ.get("COHERE_API_KEY")
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+GOOGLEMAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
 cohere_model = CohereAPI(cohere_api_key=COHERE_API_KEY, pinecone_api_key=PINECONE_API_KEY)
 
-tokyo_attractions = [
+dummy_attractions = [
     {
-        "name": "Tokyo Skytree",
-        "description": "The tallest tower in Japan, offering panoramic views of Tokyo from its observation decks.",
-        "price": {"min_price": 2200, "max_price": 2200},
-        "location": "Sumida City"
+        "description": "Embark on a guided hike through the lush trails of Hampstead Heath, offering breathtaking views of the city skyline and the iconic London Eye.",
+        "eventName": "Hampstead Heath Hiking Tour",
+        "latitude": "51.509865",
+        "location": "Hampstead Heath, London, UK",
+        "longitude": "-0.118092",
+        "max_cost": "30",
+        "min_cost": "20",
+        "opening_hours": "08:00-18:00",
+        "sector": "activity",
+        "url": ""
     },
     {
-        "name": "Senso-ji Temple",
-        "description": "One of Tokyo's oldest and most significant Buddhist temples, known for its vibrant gates and incense smoke.",
-        "price": {"min_price": 0, "max_price": 0},
-        "location": "Asakusa"
+        "description": "Indulge in a gourmet dining experience at a Michelin-starred restaurant in Soho, featuring modern British cuisine and an extensive wine list.",
+        "eventName": "Dinner at Restaurant Story",
+        "latitude": "51.5085",
+        "location": "Soho, London, UK",
+        "longitude": "-0.1257",
+        "max_cost": "200",
+        "min_cost": "150",
+        "opening_hours": "18:00-22:00",
+        "sector": "restaurant",
+        "url": ""
     },
     {
-        "name": "Shibuya Crossing",
-        "description": "The world's busiest pedestrian crossing, a symbol of Tokyo's bustling urban life.",
-        "price": {"min_price": 0, "max_price": 0},
-        "location": "Shibuya"
+        "description": "Experience the thrill of indoor skydiving in a vertical wind tunnel, simulating the sensation of freefall in a safe and controlled environment.",
+        "eventName": "Indoor Skydiving at iFLY London",
+        "latitude": "51.5085",
+        "location": "iFLY London, London, UK",
+        "longitude": "-0.1257",
+        "max_cost": "80",
+        "min_cost": "50",
+        "opening_hours": "10:00-20:00",
+        "sector": "activity",
+        "url": ""
     },
     {
-        "name": "Tsukiji Outer Market",
-        "description": "A lively seafood and food market with fresh sushi, snacks, and kitchenware.",
-        "price": {"min_price": 100, "max_price": 5000},
-        "location": "Tsukiji"
+        "description": "Relax in a luxurious 5-star hotel in the heart of Mayfair, offering elegant rooms, a spa, and exceptional dining options.",
+        "eventName": "Stay at The Ritz London",
+        "latitude": "51.509865",
+        "location": "Mayfair, London, UK",
+        "longitude": "-0.118092",
+        "max_cost": "1000",
+        "min_cost": "600",
+        "opening_hours": "24/7",
+        "sector": "hotel",
+        "url": ""
     },
     {
-        "name": "Meiji Shrine",
-        "description": "A serene Shinto shrine surrounded by a vast forest, dedicated to Emperor Meiji and Empress Shoken.",
-        "price": {"min_price": 0, "max_price": 0},
-        "location": "Shibuya"
+        "description": "Take a scenic flight over London's iconic landmarks, including the Tower Bridge, Big Ben, and the Shard, with a knowledgeable pilot providing commentary.",
+        "eventName": "London Helicopter Tour",
+        "latitude": "51.5085",
+        "location": "London Heliport, London, UK",
+        "longitude": "-0.1257",
+        "max_cost": "250",
+        "min_cost": "180",
+        "opening_hours": "09:00-17:00",
+        "sector": "activity",
+        "url": ""
     },
     {
-        "name": "Odaiba",
-        "description": "A modern entertainment district on a man-made island, featuring shopping malls, amusement centers, and the iconic Gundam statue.",
-        "price": {"min_price": 0, "max_price": 3000},
-        "location": "Tokyo Bay"
+        "description": "Dine at a trendy restaurant in Shoreditch, specializing in innovative fusion cuisine and offering a unique tasting menu.",
+        "eventName": "Dinner at Dishoom",
+        "latitude": "51.509865",
+        "location": "Shoreditch, London, UK",
+        "longitude": "-0.118092",
+        "max_cost": "80",
+        "min_cost": "50",
+        "opening_hours": "17:00-23:00",
+        "sector": "restaurant",
+        "url": ""
     },
     {
-        "name": "Akihabara",
-        "description": "The hub of Japan's otaku culture, filled with electronics stores, anime shops, and gaming centers.",
-        "price": {"min_price": 0, "max_price": 10000},
-        "location": "Akihabara"
+        "description": "Explore the historic Tower of London, home to the Crown Jewels and centuries of rich history, with a guided tour.",
+        "eventName": "Tower of London Tour",
+        "latitude": "51.5085",
+        "location": "Tower of London, London, UK",
+        "longitude": "-0.1257",
+        "max_cost": "50",
+        "min_cost": "30",
+        "opening_hours": "09:00-17:30",
+        "sector": "activity",
+        "url": ""
     },
     {
-        "name": "Ueno Park",
-        "description": "A large public park home to museums, temples, and the beautiful Shinobazu Pond.",
-        "price": {"min_price": 0, "max_price": 1000},
-        "location": "Ueno"
+        "description": "Stay in a stylish boutique hotel in the vibrant neighborhood of Camden, offering modern amenities and easy access to local attractions.",
+        "eventName": "Stay at The Z Hotel Camden",
+        "latitude": "51.509865",
+        "location": "Camden, London, UK",
+        "longitude": "-0.118092",
+        "max_cost": "200",
+        "min_cost": "120",
+        "opening_hours": "24/7",
+        "sector": "hotel",
+        "url": ""
     },
     {
-        "name": "Roppongi Hills",
-        "description": "A modern urban development with shopping, dining, art museums, and the Mori Tower observation deck.",
-        "price": {"min_price": 0, "max_price": 5000},
-        "location": "Roppongi"
+        "description": "Take a guided bike tour through London's iconic landmarks, including Buckingham Palace, Hyde Park, and the Houses of Parliament.",
+        "eventName": "London Bike Tour",
+        "latitude": "51.5085",
+        "location": "London Bike Tour Meeting Point, London, UK",
+        "longitude": "-0.1257",
+        "max_cost": "40",
+        "min_cost": "30",
+        "opening_hours": "10:00-16:00",
+        "sector": "activity",
+        "url": ""
     },
     {
-        "name": "Imperial Palace",
-        "description": "The primary residence of Japan's Imperial Family, surrounded by moats and large gardens.",
-        "price": {"min_price": 0, "max_price": 0},
-        "location": "Chiyoda"
+        "description": "Dine at a traditional British pub in Covent Garden, serving classic dishes and a wide selection of local beers.",
+        "eventName": "Dinner at The Lamb & Flag",
+        "latitude": "51.509865",
+        "location": "Covent Garden, London, UK",
+        "longitude": "-0.118092",
+        "max_cost": "40",
+        "min_cost": "25",
+        "opening_hours": "12:00-22:00",
+        "sector": "restaurant",
+        "url": ""
     }
 ]
+
+output_format = {
+  "itinerary": [
+    [
+      {
+        "description": "",
+        "eventName": "",
+        "latitude": "",
+        "location": "",
+        "longitude": "",
+        "max_cost": "",
+        "min_cost": "",
+        "opening_hours": "hh:mm-hh:mm",
+        "sector": "restaurant | activity | flight | hotel",
+        "url": ""
+      },
+      {
+        "description": "",
+        "eventName": "",
+        "latitude": "",
+        "location": "",
+        "longitude": "",
+        "max_cost": "",
+        "min_cost": "",
+        "opening_hours": "hh:mm-hh:mm",
+        "sector": "restaurant | activity | flight | hotel",
+        "url": ""
+      }
+    ],
+    [
+      {
+        "description": "",
+        "eventName": "",
+        "latitude": "",
+        "location": "",
+        "longitude": "",
+        "max_cost": "",
+        "min_cost": "",
+        "opening_hours": "hh:mm-hh:mm",
+        "sector": "restaurant | activity | flight | hotel",
+        "url": ""
+      },
+      {
+        "description": "",
+        "eventName": "",
+        "latitude": "",
+        "location": "",
+        "longitude": "",
+        "max_cost": "",
+        "min_cost": "",
+        "opening_hours": "hh:mm-hh:mm",
+        "sector": "restaurant | activity | flight | hotel",
+        "url": ""
+      }
+    ]
+  ]
+}
 
 def generate_short_URL(length=8):
     characters = string.ascii_uppercase + string.digits
@@ -122,8 +242,8 @@ def generate_trip():
     )
     db.session.add(new_trip_request)
 
-    trip_data = asyncio.run(op.main(data["city"], data["curr_location"]))
-    print(trip_data)
+    #### trip_data = asyncio.run(op.main(data["city"], data["curr_location"]))
+    #### print(trip_data)
 
     # find num_docs by calculating substrings of data['start_date'] and data['end_date'], num_docs = num_days * 10
     start_date = datetime.strptime(data['start_date'], '%m%d%Y')
@@ -133,6 +253,21 @@ def generate_trip():
     num_days = (end_date - start_date).days
 
     num_docs = num_days * 10
+
+    ### ADDRESS TO LATITUDE AND LONGITUDE
+    # Initialize the Google Maps client
+    gmaps = googlemaps.Client(key=GOOGLEMAPS_API_KEY)
+    # Address to convert
+    address = data['city']
+    # Geocoding the address
+    geocode_result = gmaps.geocode(address)
+    # Extracting latitude and longitude
+    if geocode_result:
+        latitude = geocode_result[0]['geometry']['location']['lat']
+        longitude = geocode_result[0]['geometry']['location']['lng']
+    else:
+        latitude = 45.5307272
+        longitude = -73.6161212
     
     base_prompt = "Given a user-specified location, return RELEVANT events (hotels, flights, restaurants, or activities) that are near the specified location. Prioritize options that are within a reasonable distance (e.g., same city, nearby town, or accessible within a short travel time). Ensure diversity by including a mix of hotels, flights, restaurants, and activities. DO NOT BE BAD, GIVE ONLY EVENTS THAT ARE NEARBY. LOCATION MATTERS. You must spread out the opening hours so all these attractions can be visited through the given date range."
     if 'additional_info' in data:
@@ -141,7 +276,24 @@ def generate_trip():
         prompt = f"{data['city']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}."
     prompt = base_prompt + prompt
 
-    search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": 43.644204, "longitude": -79.387883}, num_documents=num_docs)
+    #### search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": latitude, "longitude": longitude}, num_documents=num_docs)
+
+
+    test_city = "London"
+    test_start_date = "01012026"
+    test_end_date = "01042026"
+    test_min_budget = 500
+    test_max_budget = 5000
+
+    combine_prompt = f"Given the below data: {json.dumps(dummy_attractions)} create an itinerary of {num_days} days starting from {test_start_date} to {test_end_date}. Fit all the costs within {test_min_budget} and {test_max_budget}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the following JSON format: {json.dumps(output_format)}. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT."
+
+    
+
+    response = send_prompt(combine_prompt)
+    print(response)
+
+    
+    search_results = dummy_attractions
 
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),
