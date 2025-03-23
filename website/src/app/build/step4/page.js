@@ -61,10 +61,17 @@ const Step3 = () => {
 
     return (
         <div className="mt-20">
+            <Link href={"/build/step3"}>
+                <button
+                    className="ml-30 mb-12 text-white px-8 py-2 rounded-lg border-white cursor-pointer hover:bg-[#f4f4f420] transition-all"
+                >
+                    <img src='/chevron-left.svg' className="inline h-4 mb-0.5"/> Back 
+                </button>
+            </Link>
             <h2 className="text-4xl text-black text-center w-screen text-white font-bold">Anything Else?</h2>
             <div className="flex gap-4 w-1/2 mx-auto mt-10 justify-around">
                 <textarea
-                    className="bg-white flex w-1/1"
+                    className="bg-white flex w-1/1 p-4 text-black rounded-lg cursor-pointer hover:bg-[#f4f4f4f4] transition-all"
                     onChange={(event) => {
                         setSelected(event.target.value); 
                         localStorage.setItem("additionalInfo", event.target.value);
@@ -74,7 +81,7 @@ const Step3 = () => {
             <div className={"w-1/1 items-center justify-center flex flex-row"}>
                 <button
                     onClick={handleSubmit}
-                    className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10"
+                    className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10 hover:bg-[#f4f4f420] px-4 py-2 rounded-lg"
                 >
                     That's everything!
                 </button>

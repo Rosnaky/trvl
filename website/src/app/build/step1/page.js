@@ -39,7 +39,12 @@ const Step1 = () => {
                 />
             </div>
             <div className={"w-1/1 items-center justify-center flex flex-row"}>
-                <Link href={"/build/step2"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-4">I'm flexible</Link>
+                <Link href={"/build/step2"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-4"
+                    onClick={() => {
+                        localStorage.setItem("date", JSON.stringify({ from: null, to: null }))
+                    }}>
+                        I'm flexible
+                </Link>
             </div>
             <div className="flex flex-row-reverse w-1/2 mx-auto mt-8">
             <Link href={"/build/step2"}>
