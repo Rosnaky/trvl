@@ -18,9 +18,9 @@ const Event = ({ event, markerRefs }) => {
     }
 
     return (
-        <div className="border border-[#77777777] rounded-lg ml-12 m-8 p-4 flex gap-4 cursor-pointer" onMouseEnter={setCenter} onClick={openWindow}>
-            <img className="w-28 h-28 rounded-2xl" src={event.image}/>
-            <div>
+        <div className="bg-white/20 ml-12 mr-12 mt-4 rounded-xl mb-8 relative gap-8 cursor-pointer object-cover over min-h-40 overflow-hidden" onMouseEnter={setCenter} onClick={openWindow}>
+            <img className="absolute saturate-80 w-2/9 h-1/1 object-cover" src={event.image}/>
+            <div className="absolute left-19/80 top-2">
                 <p className="text-white font-semibold text-xl">{event.activity}</p>
                 <p className="text-sm text-white">{event.type}</p>
             </div>

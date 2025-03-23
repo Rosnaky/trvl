@@ -143,18 +143,18 @@ const Page = () => {
     })
 
     return (
-        <APIProvider apiKey={process.env.NEXT_PUBLIC_GMAPS_API_KEY}>
+        <APIProvider apiKey={"AIzaSyCz7lHTKwLoqGhJVjPD2kDgx7iMwe-juao"}>
             <div className="px-12 flex gap-12">
                 <div className="w-3/5 pt-20">
-                    <h3 className="text-4xl text-center text-white font-semibold pb-12">2 Day Trip to Paris</h3>
+                    <h3 className="text-4xl text-center text-white font-semibold pb-12 font-(family-name:--font-playwrite-us)">2 Day Trip to Paris</h3>
                     {
                         schedule.map((day, idx) => {
-                            return <Day key={idx} day={day} dayNum={idx} markerRefs={markerRefs} />
+                            return <Day key={idx} day={day} dayNum={idx} markerRefs={markerRefs}/>
                         })
                     }
                 </div>
-                <div>
-                    <div className="w-3/10 py-20 fixed h-6/5">
+                <div className="flex">
+                    <div className="flex w-3/8 py-2.5 fixed h-5/4">
                         <Map
                             style={{ width: '100%', height: '80%' }}
                             defaultCenter={{ lat: schedule[0][0].latitude, lng: schedule[0][0].longitude }}
