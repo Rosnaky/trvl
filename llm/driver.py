@@ -7,8 +7,8 @@ load_dotenv()
 COHERE_API_KEY = os.environ.get("COHERE_API_KEY")
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 
-# if __name__ == "__main__":
-#     model = CohereAPI(cohere_api_key=COHERE_API_KEY, pinecone_api_key=PINECONE_API_KEY)
+if __name__ == "__main__":
+    model = CohereAPI(cohere_api_key=COHERE_API_KEY, pinecone_api_key=PINECONE_API_KEY)
 
 
 # #     text1 = """Event 1: Annual Tech Conference
@@ -62,20 +62,67 @@ PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 
 # # """
 
+    text4 = """1. Hotel: Grand Ocean Resort
+Escape to Grand Ocean Resort, a luxury beachfront hotel in Miami, Florida. Open 24/7, this five-star resort offers stunning ocean views, infinity pools, and world-class dining. Room rates start at $250 per night, with premium suites reaching $1,200. Ideal for relaxation, honeymoons, and business retreats."""
+    text5 = """New York to London – British Airways
+Take a premium international journey with British Airways, offering daily non-stop flights from JFK Airport, New York to Heathrow Airport, London. Flights depart from 08:00-22:00 daily, with economy fares starting at $550 and first-class seats at $3,000. Experience top-tier comfort and in-flight entertainment."""
+    text6 = """The Golden Fork – Paris
+Dine at The Golden Fork, a Michelin-star restaurant in Paris, France, renowned for its authentic French cuisine. Open from 18:00-23:30, enjoy exquisite dishes like foie gras, escargot, and aged wine. A meal costs between $70 and $250, offering a refined dining experience in the heart of Paris."""
+    text7 = """Skydiving in Dubai
+Experience an adrenaline rush with a tandem skydiving adventure over Palm Jumeirah, Dubai. Open from 07:00-17:00, this bucket-list activity costs between $400 and $650 per person. Certified instructors ensure a thrilling yet safe freefall with breathtaking city and ocean views."""
+    text8 = """Alpine Ski Lodge – Switzerland
+Nestled in the Swiss Alps, the Alpine Ski Lodge is a cozy winter retreat with panoramic mountain views. Open all year round, with peak ski season from November to March, room rates range from $180 to $700 per night. Perfect for skiing, snowboarding, and relaxation by the fireplace.
+"""
+    text9 = """Los Angeles to Tokyo – Japan Airlines
+Fly from LAX, Los Angeles to Narita, Tokyo with Japan Airlines, featuring high-end service and gourmet Japanese meals. Departures run from 06:00-23:00, with ticket prices from $650 in economy to $5,000 in first class. A seamless way to explore Japan.
+"""
+    text10 = """Sushi Heaven – Tokyo
+Visit Sushi Heaven, an award-winning omakase restaurant in Shibuya, Tokyo. Open from 12:00-22:00, this intimate dining spot serves handcrafted sushi, priced between $50 and $300 per person. Enjoy fresh seafood flown in daily from Tsukiji Market."""
+
+    text11 = """CN Tower EdgeWalk – A thrilling activity where you walk along the edge of the CN Tower, 356m above ground. Open 09:00-20:00, costs $195 per person. (Sector: activity)"""
+    text12 = """Helicopter Tour Over Toronto – A 15-minute private helicopter ride showcasing the Toronto skyline, CN Tower, and waterfront. Open 10:00-18:00, costs $130-$300 per person. (Sector: activity)"""
+
 # #     # model.add_document(data=text1)
 # #     # model.add_document(data=text2)
 # #     # model.add_document(data=text3)
 
-#     human_prompt = "Return a list of events that are most relevant to the following prompt. Consider all factors."
+    # model.add_document(data=text4)
+    # model.add_document(data=text5)
+    # model.add_document(data=text6)
+    # model.add_document(data=text7)
+    # model.add_document(data=text8)
+    # model.add_document(data=text9)
+    # model.add_document(data=text10)
+    # model.add_document(data=text11)
+    # model.add_document(data=text12)
 
-#     actual_prompt = "I am a software engineering student who makes a lot of money. I am single and have no budget concerns."
+    base_prompt = """Given a user-specified location, return RELEVANT events (hotels, flights, restaurants, or activities) that are near the specified location. Prioritize options that are within a reasonable distance (e.g., same city, nearby town, or accessible within a short travel time). Ensure diversity by including a mix of hotels, flights, restaurants, and activities.
+                    DO NOT BE BAD, GIVE ONLY EVENTS THAT ARE NEARBY. LOCATION MATTERS.
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+                    TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO TORONTO
+    """
 
-#     res = model.retrieve_documents(
-#         # context=sys_prompt,
-#         prompt=human_prompt + actual_prompt,
-#         num_documents=2
-#     )
+    actual_prompt = "I am a software engineering student who makes a lot of money. I am going from Waterloo to Toronto. I am single and have no budget concerns."
 
-#     with open("b.txt", "w") as f:
-#         f.write(str(res))
+    res = model.retrieve_documents(
+        # context=sys_prompt,
+        prompt=base_prompt + actual_prompt,
+        num_documents=5
+    )
+
+    with open("b.txt", "w") as f:
+        f.write(str(res))
             

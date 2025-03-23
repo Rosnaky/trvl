@@ -10,8 +10,12 @@ from typing import List
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain.chat_models import init_chat_model
 from pydantic import ValidationError
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 from schema import Items, Item
+
+THRESHOLD_SIMILARITY = 0.5
 
 class CohereAPI:
     def __init__(self, cohere_api_key: str, pinecone_api_key: str, model_name: str = "command-r-plus"):
@@ -41,7 +45,27 @@ class CohereAPI:
 
         # print(docs)
 
-        return [d.metadata for d in docs]
+        # return [d.metadata for d in docs]
+        embedder = CohereEmbeddings(model="embed-english-v3.0")
+        query_embedding = embedder.embed_query(prompt)
+
+    # Step 2: Retrieve documents
+        docs = self.retriever.invoke(prompt, k=num_documents)
+
+        results = []
+        for d in docs:
+            metadata = d.metadata
+
+            doc_embedding = embedder.embed_query(d.page_content)  # Ensure your retriever provides this!
+            similarity = cosine_similarity(
+                np.array(query_embedding).reshape(1, -1),
+                np.array(doc_embedding).reshape(1, -1)
+            )[0][0]
+            print(str(similarity) + " " + str(metadata))
+            if (similarity > THRESHOLD_SIMILARITY):
+                results.append(metadata)
+
+        return results
 
     
     def extract_structured_data(self, text: str):
