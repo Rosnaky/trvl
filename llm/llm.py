@@ -56,6 +56,8 @@ class CohereAPI:
                 "min_cost": "The minimum recommended cost to participate in the event",
                 "max_cost": "The maximum recommended cost to participate in the event",
                 "sector": "The type of activity. It must be one of the following four options: restaurant, activity, flight, hotel."
+                "url": "The url for more information about the event"
+                "description": "A very short description of the event, about 30 words."
             }
 
             - If a field is missing in the text, set it to an empty string (`""`) instead of `null`.
