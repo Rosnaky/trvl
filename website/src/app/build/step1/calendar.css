@@ -1,0 +1,47 @@
+/* global.css or your main CSS file */
+
+.rdp-root {
+    --rdp-accent-color: #64b5f6; /* Light blue accent */
+    --rdp-accent-background-color: #e3f2fd88; /* Light blue background */
+    --rdp-text-color: white; /* Dark text */
+    --rdp-day_button-hover-background: #e0e0e0; /* Light hover background */
+    --rdp-range_middle-color: #333333;
+    --rdp-day_button-height: 44px;
+    --rdp-day_button-width: 44px;
+    --rdp-day-width: 50px;
+  }
+  
+  [data-theme="dark"] .rdp-root {
+    --rdp-accent-color: #ffca28; /* Yellow accent for dark mode */
+    --rdp-accent-background-color: #424242; /* Darker accent background */
+    --rdp-background-color: #1e1e1e; /* Dark background */
+    --rdp-text-color: #d4d4d4; /* Light text */
+    --rdp-day_button-background: #282828; /* Dark day button background */
+    --rdp-day_button-hover-background: #3a3a3a; /* Darker hover background */
+    --rdp-range_middle-background-color: #333333; /* Dark range middle background */
+    --rdp-range_middle-color: #d4d4d4;
+  }
+  
+  .rdp-day_button {
+      background-color: var(--rdp-day_button-background);
+      color: var(--rdp-text-color);
+  }
+  
+  .rdp-day_button:hover {
+    border: 2px solid #1e1e1e;
+    border-radius: 40px;
+
+      /* background-color: #8dcbff; */
+  }
+  
+  .rdp-range_middle{
+      background-color: var(--rdp-range_middle-background-color);
+      color: var(--rdp-range_middle-color);
+  }
+  
+  .rdp{
+      background-color: var(--rdp-background-color);
+      color: var(--rdp-text-color);
+  }
+  
+  /* Add any other custom styles here */
