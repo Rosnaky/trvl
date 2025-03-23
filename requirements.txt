@@ -10,3 +10,6 @@ langchain_cohere
 pydantic
 scikit-learn
 geopy
+googlemaps
+langchain-google-genai
+browser-use

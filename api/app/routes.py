@@ -1,3 +1,4 @@
+import asyncio
 from flask import Blueprint, request, jsonify
 from app import db
 from app.models import Itinerary, TripRequest
@@ -6,6 +7,8 @@ import string
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+
+from webscraper import op
 
 from llm.llm import CohereAPI
 
@@ -119,6 +122,8 @@ def generate_trip():
     )
     db.session.add(new_trip_request)
 
+    trip_data = asyncio.run(op.main(data["city"], data["curr_location"]))
+
     # find num_docs by calculating substrings of data['start_date'] and data['end_date'], num_docs = num_days * 10
     start_date = datetime.strptime(data['start_date'], '%m%d%Y')
     end_date = datetime.strptime(data['end_date'], '%m%d%Y')
@@ -135,7 +140,7 @@ def generate_trip():
         prompt = f"{data['city']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}."
     prompt = base_prompt + prompt
 
-    search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": 43, "longitude": -75}, num_documents=num_docs)
+    search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": 43.644204, "longitude": -79.387883}, num_documents=num_docs)
 
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),
