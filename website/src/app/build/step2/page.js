@@ -4,8 +4,6 @@ import { useState } from "react"
 import Link from "next/link"
 
 const Step2 = () => {
-    const [selected, setSelected] = useState(null)
-
     const options = [
         ["Alone 😔", 1],
         ["With SO 💑", 2],
@@ -13,8 +11,8 @@ const Step2 = () => {
         ["Family 👪", 4]
     ]
 
-    console.log(selected);
-
+    const [selected, setSelected] = useState(options.find(([option, numPeople]) => numPeople === parseInt(localStorage.getItem("numPeople")))?.[0] || null)
+    
     return (
         <div className="mt-20">
             <Link href={"/build/step1"}>

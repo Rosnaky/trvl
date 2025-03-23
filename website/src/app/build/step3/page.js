@@ -5,8 +5,8 @@ import Link from "next/link";
 import { ToastContainer, toast } from 'react-toastify';
 
 const Step3 = () => {
-    const [min, setMin] = useState(0);
-    const [max, setMax] = useState(0);
+    const [min, setMin] = useState(localStorage.getItem("min") || 0);
+    const [max, setMax] = useState(localStorage.getItem("max") || 0);
     const notify = (message) => toast.error(message, {
         position: "top-right",
         autoClose: 2000,
@@ -15,10 +15,6 @@ const Step3 = () => {
         pauseOnHover: false,
         progress: undefined,
     });
-
-    const validate = () => {
-
-    }
 
     return (
         <div className="flex justify-center flex-col mt-20">
@@ -41,6 +37,7 @@ const Step3 = () => {
                             notify("Minimum cannot be more than maximum")
                             setMin(Math.min(min, max))
                         }
+                        localStorage.setItem("min", min)
                     }}
                 />
             </div>
@@ -55,6 +52,7 @@ const Step3 = () => {
                             notify("Maximum cannot be less than minimum")
                             setMax(Math.max(max, min))
                         }
+                        localStorage.setItem("max", max)
                     }}
                 />
             </div>
@@ -63,7 +61,7 @@ const Step3 = () => {
                 <Link href={"/build/step4"}>
                     <button
                         className="border border-white px-8 py-2 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
-                        style={{ transition: "opacity 0.5s ease-in", opacity: min*max ? 1 : 0 }}
+                        style={{ transition: "opacity 0.5s ease-in", opacity: min+max ? 1 : 0 }}
                     >
                         Next <img src='/chevron-right.svg' className="inline h-4 mb-0.5 -mr-2"/>
                     </button>
