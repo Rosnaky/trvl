@@ -15,7 +15,7 @@ import numpy as np
 
 from schema import Items, Item
 
-THRESHOLD_SIMILARITY = 0.5
+THRESHOLD_SIMILARITY = 0.4
 
 class CohereAPI:
     def __init__(self, cohere_api_key: str, pinecone_api_key: str, model_name: str = "command-r-plus"):
@@ -61,11 +61,11 @@ class CohereAPI:
                 np.array(query_embedding).reshape(1, -1),
                 np.array(doc_embedding).reshape(1, -1)
             )[0][0]
-            print(str(similarity) + " " + str(metadata))
+            # print(str(similarity) + " " + str(metadata))
             if (similarity > THRESHOLD_SIMILARITY):
                 results.append(metadata)
 
-        return results
+        return json.dumps({"data": results}, indent=4)
 
     
     def extract_structured_data(self, text: str):
