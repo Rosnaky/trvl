@@ -143,7 +143,7 @@ const Page = () => {
     })
 
     return (
-        <APIProvider apiKey={"AIzaSyCz7lHTKwLoqGhJVjPD2kDgx7iMwe-juao"}>
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GMAPS_API_KEY}>
             <div className="px-12 flex gap-12">
                 <div className="w-3/5 pt-20">
                     <h3 className="text-4xl text-center text-white font-semibold pb-12 font-(family-name:--font-playwrite-us)">2 Day Trip to Paris</h3>
