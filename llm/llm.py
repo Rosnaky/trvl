@@ -35,7 +35,7 @@ class CohereAPI:
     
         self.vector_store.add_documents([document])
 
-    def retrieve_documents(self, prompt: str, num_documents: int = 1):
+    def retrieve_documents(self, prompt: str, num_documents: int = 5):
 
         docs = self.retriever.invoke(prompt, k=num_documents)
 
