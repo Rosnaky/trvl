@@ -335,14 +335,14 @@ def generate_trip():
     test_min_budget = 500
     test_max_budget = 5000
 
-    combine_prompt = f"Given the below data: {json.dumps(dummy_attractions)} create an itinerary of {num_days} days starting from {test_start_date} to {test_end_date}. Fit all the costs within {test_min_budget} and {test_max_budget}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the following JSON format: {json.dumps(output_format)}. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT."
+    combine_prompt = f"Given the following attraction data: create an itinerary of {num_days} days starting from {test_start_date} to {test_end_date}. Fit all the costs within {test_min_budget} and {test_max_budget}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the JSON format: above. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT."
 
-    
+    documents = ["actual attraction data: " + json.dumps(dummy_attractions), "fake format data DO NOT USE: " + json.dumps(output_format)]
 
-    response = send_prompt(combine_prompt)
+    response = cohere_model.send_prompt(combine_prompt, documents)
     print(response)
 
-    
+
     search_results = dummy_attractions
 
     new_intinerary = Itinerary(
