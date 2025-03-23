@@ -70,18 +70,7 @@ async def fetch_data_for_category_1(category: str, prompt: str):
     result = await agent.run()
     final_result = result.final_result()
 
-    print(final_result)
-
-
-    try:
-        data = json.loads(final_result)  # Assuming the result is a JSON string
-        if isinstance(data, list):
-            # Convert to list of FlightData
-            return [EventData(**item) for item in data]
-        else:
-            return []
-    except json.JSONDecodeError:
-        return []
+    return final_result
 async def fetch_data_for_category_2(category: str, prompt: str):
     # Adjust the prompt for each category (hotels, events, restaurants, flights)
     agent = Agent(
@@ -89,22 +78,14 @@ async def fetch_data_for_category_2(category: str, prompt: str):
         llm=llm2,
         controller=controller,
         max_failures=3,
-        retry_delay=20
+        retry_delay=20,
     )
     result = await agent.run()
     final_result = result.final_result()
 
-    print(final_result)
+    # print(final_result)
 
-    try:
-        data = json.loads(final_result)  # Assuming the result is a JSON string
-        if isinstance(data, list):
-            # Convert to list of FlightData
-            return [HotelData(**item) for item in data]
-        else:
-            return []
-    except json.JSONDecodeError:
-        return []
+    return final_result
 async def fetch_data_for_category_3(category: str, prompt: str):
     # Adjust the prompt for each category (hotels, events, restaurants, flights)
     agent = Agent(
@@ -117,17 +98,9 @@ async def fetch_data_for_category_3(category: str, prompt: str):
     result = await agent.run()
     final_result = result.final_result()
 
-    print(final_result)
+    # print(final_result)
 
-    try:
-        data = json.loads(final_result)  # Assuming the result is a JSON string
-        if isinstance(data, list):
-            # Convert to list of FlightData
-            return [RestaurantData(**item) for item in data]
-        else:
-            return []
-    except json.JSONDecodeError:
-        return []
+    return final_result
 async def fetch_data_for_category_4(category: str, prompt: str):
     # Adjust the prompt for each category (hotels, events, restaurants, flights)
     agent = Agent(
@@ -140,17 +113,9 @@ async def fetch_data_for_category_4(category: str, prompt: str):
     result = await agent.run()
     final_result = result.final_result()
 
-    print(final_result)
+    # print(final_result)
 
-    try:
-        data = json.loads(final_result)  # Assuming the result is a JSON string
-        if isinstance(data, list):
-            # Convert to list of FlightData
-            return [FlightData(**item) for item in data]
-        else:
-            return []
-    except json.JSONDecodeError:
-        return []
+    return final_result
 
 async def main(location, curr_location):
     # Create separate prompts for each category
@@ -166,21 +131,22 @@ async def main(location, curr_location):
     flights_task = asyncio.create_task(fetch_data_for_category_4('flights', flight_prompt))
 
     # Wait for all tasks to complete
-    await asyncio.gather(events_task, hotels_task, restaurants_task, flights_task)
+    await asyncio.gather(events_task
+                         , hotels_task, restaurants_task, flights_task
+                         )
 
     # Gather results
-    events = events_task.result()
-    hotels = hotels_task.result()
-    restaurants = restaurants_task.result()
-    flights = flights_task.result()
+    events = events_task.result()["events"]
+    hotels = hotels_task.result()["hotels"]
+    restaurants = restaurants_task.result()["restaurants"]
+    flights = flights_task.result()["flights"]
+
+    res = [events, hotels, restaurants, flights]
 
     # Print the raw results
-    print(FinalData(
-        events=events,
-        hotels=hotels,
-        restaurants=restaurants,
-        flights=flights
-    ).model_dump_json())
+    print(
+        res
+    )
 
 # Run the async main function
 asyncio.run(main("Toronto", "Montreal"))
