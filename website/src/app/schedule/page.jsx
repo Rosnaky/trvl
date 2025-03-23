@@ -1,9 +1,14 @@
 "use client"
 
 import Day from "./components/day";
-import {APIProvider, Map, AdvancedMarker} from '@vis.gl/react-google-maps';
+import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
+import Marker from "./components/marker";
+import { useRef } from "react";
 
 const Page = () => {
+    const markerRefs = useRef([]);
+
+
     const schedule = [
         [
             {
@@ -131,38 +136,38 @@ const Page = () => {
         ]
     ]
 
+    const scheduleMarkers = schedule.flat(1).map((event, idx) => {
+        console.log(markerRefs[idx])
+        return <Marker ref={(el) => (markerRefs.current[idx] = el)}
+        key={event.activity} position={{ lat: event.latitude, lng: event.longitude }} event={event} />
+    })
+
     return (
-        <div className="px-12 flex gap-12">
-            <div className="w-3/5 pt-20">
-                <h3 className="text-4xl text-center text-white font-semibold pb-12">2 Day Trip to Paris</h3>
-                {
-                    schedule.map((day, idx) => {
-                        return <Day key={idx} day={day} dayNum={idx} />
-                    })
-                }
-            </div>
-            <div>
-                <div className="w-3/10 py-20 fixed h-6/5">
-                    <APIProvider apiKey={process.env.NEXT_PUBLIC_GMAPS_API_KEY}>
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GMAPS_API_KEY}>
+            <div className="px-12 flex gap-12">
+                <div className="w-3/5 pt-20">
+                    <h3 className="text-4xl text-center text-white font-semibold pb-12">2 Day Trip to Paris</h3>
+                    {
+                        schedule.map((day, idx) => {
+                            return <Day key={idx} day={day} dayNum={idx} markerRefs={markerRefs} />
+                        })
+                    }
+                </div>
+                <div>
+                    <div className="w-3/10 py-20 fixed h-6/5">
                         <Map
-                            style={{width: '100%', height: '80%' }}
-                            defaultCenter={{lat: schedule[0][0].latitude, lng: schedule[0][0].longitude}}
-                            defaultZoom={14}
+                            style={{ width: '100%', height: '80%' }}
+                            defaultCenter={{ lat: schedule[0][0].latitude, lng: schedule[0][0].longitude }}
+                            defaultZoom={13}
                             mapId="ee0d23538130ee44"
                             gestureHandling={'greedy'}
                         >
-                            {
-                                schedule.flat(1).map((event) => {
-                                    return <AdvancedMarker key={event.activity} position={{lat: event.latitude, lng: event.longitude}} />
-                                })
-                            }
+                            {scheduleMarkers}
                         </Map>
-                    </APIProvider>
+                    </div>
                 </div>
             </div>
-
-
-        </div>
+        </APIProvider>
     )
 }
 
