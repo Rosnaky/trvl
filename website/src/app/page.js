@@ -1,13 +1,13 @@
 "use client"
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import EventTile from "./components/event-tile";
+import Link from "next/link";
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [autoCompVis, setAutoCompVis] = useState(false);
-  const [timeoutID, setTimeoutID] = useState("");
-  const [longLat, setLongLat] = useState([-1, -1]);
   const [slide, setSlide] = useState(0);
 
   const carouselScroll = (dir) => {
@@ -25,63 +25,52 @@ export default function Home() {
     setSlide((slide+dir)%5);
   }
 
-  const autocomplete = (newVal) => {
-    /**if(timeoutID != "") {
-      clearTimeout(timeoutID);
-    }
-    let temp_id = setTimeout(autocompleteReal(newVal), 500);
-    console.log(temp_id);
-    setTimeoutID(temp_id);**/
-    autocompleteReal(newVal);
-  }
-
   const locations = [
         {
             "city": "Paris",
             "country": "France",
             "people": 3,
             "price": 325,
-            "type": "Sightseeing",
-            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg",
+            "id": 0,
         },
         {
-            "city": "Paris",
-            "country": "France",
-            "people": 3,
-            "price": 325,
-            "type": "Sightseeing",
-            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+            "city": "Barcelona",
+            "country": "Spain",
+            "people": 5,
+            "price": 400,
+            "image": "https://www.odysseys-unlimited.com/wp-content/uploads/2023/05/AdobeStock_102733741-scaled.jpeg",
+            "id": 1,
         },
         {
-            "city": "Paris",
-            "country": "France",
-            "people": 3,
-            "price": 325,
-            "type": "Sightseeing",
-            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+            "city": "Florence",
+            "country": "Italy",
+            "people": 2,
+            "price": 250,
+            "image": "https://cdn.britannica.com/59/179059-050-62BD6102/Cathedral-of-Santa-Maria-del-Fiore-Florence.jpg",
+            "id": 2,
         },
         {
-            "city": "Paris",
-            "country": "France",
-            "people": 3,
-            "price": 325,
-            "type": "Sightseeing",
-            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+            "city": "Anchorage",
+            "country": "United States",
+            "people": 7,
+            "price": 834,
+            "image": "https://res.cloudinary.com/simpleview/image/upload/v1551922247/clients/anchorage/Aurora_Camp_JodyO_Photos_77ea0fae-bf4c-43be-a827-1ef25ac9c2fb.jpg",
+            "id": 3,
         },
         {
-            "city": "Paris",
-            "country": "France",
-            "people": 3,
-            "price": 325,
-            "type": "Sightseeing",
-            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+            "city": "Montreal",
+            "country": "Canada",
+            "people": 4,
+            "price": 185,
+            "image": "https://www.usatoday.com/gcdn/authoring/authoring-images/2024/08/14/USAT/74794361007-36472-credit-fr-loic-romer-tourisme-montreal-en-credit-loic-romer-tourisme-montreal.jpg",
+            "id": 4,
         }
   ]
   
-  async function autocompleteReal(newVal) {
+  async function autocomplete(newVal) {
     const autocomp = document.getElementById("autocomplete_container");
     setSearchText(newVal);
-    setTimeoutID("");
     if(newVal.length >= 4) {
       const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${newVal}&limit=3&type=city&format=json&apiKey=7430b011e2ce4d42b547e4d108ff75c5`;
       try {
@@ -100,22 +89,13 @@ export default function Home() {
               if(json.results[i].city == autocomp.children[j].city && json.results[i].state == autocomp.children[j].state && json.results[i].country == autocomp.children[j].country) {
                 continue;
               }
-              else {
-                console.log(json.results[i].city);
-                console.log(autocomp.children[j].city);
-                console.log(json.results[i].state);
-                console.log(autocomp.children[j].state);
-                console.log(json.results[i].country);
-                console.log(autocomp.children[j].country);
-              }
             }
           }
           let newChild = document.createElement("div");
           newChild.className = "min-h-7 pl-3 align-items text-gray-400 hover:bg-gray-100 hover:cursor-pointer";
           let text = `${json.results[i].city}, ${json.results[i].state}, ${json.results[i].country}`;
-          newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false);});
-          newChild.appendChild(document.createTextNode(text));
-          newChild.hiddenData = [json.results[i].lat, json.results[i].lon];
+          newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false); localStorage.setItem("latLongDest", [json.results[i].lat, json.results[i].lon])});
+          newChild.appendChild(document.createTextNode(text))
           autocomp.appendChild(newChild);
         }
       }
@@ -135,7 +115,7 @@ export default function Home() {
         setAutoCompVis(false);
       }
     }
-  }
+  };
 
   return (
     <div className="w-screen h-screen bg-background flex justify-center items-center">
@@ -150,12 +130,12 @@ export default function Home() {
           <div className="ml-auto mr-auto w-1/1 max-w-200 justify-center">
             <div className="overflow-hidden flex-row relative min-h-10 rounded-xl bg-white items-center border-1 border-gray-400 shadow-xl ring-black-800">
               <input onBlur={(e) => {setTimeout(function(){setAutoCompVis(false)}, 300)}} onFocus={(e) => {setAutoCompVis(true); autocomplete(searchText)}} value={searchText} onChange={(e) => {setAutoCompVis(true); autocomplete(e.target.value);}} placeholder={"Where to next?"} className="border-0 text-gray-600 outline-0 mt-1.5 absolute left-1/40 right-3/20"></input>
-              <div className="group absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 hover:cursor-pointer h-1/1">
-              <div className="absolute left-0 right-full group-hover:right-0 h-1/1 bg-foreground transition-right duration-500 ease-in-out"></div>
+              <Link href="/build/step0" className="group absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 hover:cursor-pointer h-1/1">
+                <div className="absolute left-0 right-full group-hover:right-0 h-1/1 bg-foreground transition-right duration-500 ease-in-out"></div>
                 <Image width="20" height="20" stroke="white" src={"/search.svg"} alt="" className="absolute left-3/10 right-1/5 group-hover:scale-110 transition h-3/5 mt-1.5"/>
-              </div>
+              </Link>
             </div>
-            <div id="autocomplete_container" className={`overflow-hidden text-gray-400 absolute bg-white w-1/1 max-w-200 rounded-xl border-1 border-gray-300 shadow-xl ring-black-800 ${autoCompVis ? "visible" : "invisible"}`}>
+            <div id="autocomplete_container" className={`z-5 overflow-hidden text-gray-400 absolute bg-white w-1/1 max-w-200 rounded-xl border-1 border-gray-300 shadow-xl ring-black-800 ${autoCompVis ? "visible" : "invisible"}`}>
             </div>
           </div>
         </div>
@@ -169,101 +149,9 @@ export default function Home() {
           <div className="relative h-1/1 w-1/1">
             <div id="carousel" className={`absolute -left-200 -right-200 -translate-x-${slide}/5 top-0 bottom-0 transition ease-in-out duration-300`}>
               <div className="flex flex-row justify-center items-center gap-10 h-1/1">
-                <div className="hover:scale-115 hover:shadow-sm transition-scale duration-150 relative rounded-lg overflow-hidden max-w-70 h-1/1 w-2/3 bg-white min-w-40 min-h-40 max-h-70">
-                  <img className="object-cover absolute w-1/1 h-3/4" width="10" height="10" src="https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"/>
-                  <div className="absolute w-1/1 top-3/4 bottom-0 bg-tertiary min-h-10">
-                    <div className="flex-3 flex w-5/6 m-auto justify-center items-center h-1/1 text-background">
-                      <div className="flex-3 items-start flex-col min-h-3">
-                        <p className="flex text-lg whitespace-pre">Paris,</p>
-                        <p className="flex text-sm">France</p>
-                      </div>
-                      <div className="flex flex-col justify-center items-center h-1/1 min-w-3 min-h-3">
-                        <p className="text-3xl font-bold">3</p>
-                        <p className="text-sm pb-2">people</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="hover:scale-115 hover:shadow-sm transition-scale duration-150 relative rounded-lg overflow-hidden max-w-70 h-1/1 w-2/3 bg-white min-w-40 min-h-40 max-h-70">
-                  <img className="object-cover absolute w-1/1 h-3/4" width="10" height="10" src="https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"/>
-                  <div className="absolute w-1/1 top-3/4 bottom-0 bg-tertiary min-h-10">
-                    <div className="flex-3 flex w-5/6 m-auto justify-center items-center h-1/1 text-background">
-                      <div className="flex-3 items-start flex-col min-h-3">
-                        <p className="flex text-lg whitespace-pre">Paris,</p>
-                        <p className="flex text-sm">France</p>
-                      </div>
-                      <div className="flex flex-col justify-center items-center h-1/1 min-w-3 min-h-3">
-                        <p className="text-3xl font-bold">3</p>
-                        <p className="text-sm pb-2">people</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="hover:scale-115 hover:shadow-sm transition-scale duration-150 relative rounded-lg overflow-hidden max-w-70 h-1/1 w-2/3 bg-white min-w-40 min-h-40 max-h-70">
-                  <img className="object-cover absolute w-1/1 h-3/4" width="10" height="10" src="https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"/>
-                  <div className="absolute w-1/1 top-3/4 bottom-0 bg-tertiary min-h-10">
-                    <div className="flex-3 flex w-5/6 m-auto justify-center items-center h-1/1 text-background">
-                      <div className="flex-3 items-start flex-col min-h-3">
-                        <p className="flex text-lg whitespace-pre">Paris,</p>
-                        <p className="flex text-sm">France</p>
-                      </div>
-                      <div className="flex flex-col justify-center items-center h-1/1 min-w-3 min-h-3">
-                        <p className="text-3xl font-bold">3</p>
-                        <p className="text-sm pb-2">people</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="hover:scale-115 hover:shadow-sm transition-scale duration-150 relative rounded-lg overflow-hidden max-w-70 h-1/1 w-2/3 bg-white min-w-40 min-h-40 max-h-70">
-                  <img className="object-cover absolute w-1/1 h-3/4" width="10" height="10" src="https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"/>
-                  <div className="absolute w-1/1 top-3/4 bottom-0 bg-tertiary min-h-10">
-                    <div className="flex-3 flex w-5/6 m-auto justify-center items-center h-1/1 text-background">
-                      <div className="flex-3 items-start flex-col min-h-3">
-                        <p className="flex text-lg whitespace-pre">Paris,</p>
-                        <p className="flex text-sm">France</p>
-                      </div>
-                      <div className="flex flex-col justify-center items-center h-1/1 min-w-3 min-h-3">
-                        <p className="text-3xl font-bold">3</p>
-                        <p className="text-sm pb-2">people</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="hover:scale-115 hover:shadow-sm transition-scale duration-150 relative rounded-lg overflow-hidden max-w-70 h-1/1 w-2/3 bg-white min-w-40 min-h-40 max-h-70">
-                  <img className="object-cover absolute w-1/1 h-3/4" width="10" height="10" src="https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"/>
-                  <div className="absolute w-1/1 top-3/4 bottom-0 bg-tertiary min-h-10">
-                    <div className="flex-3 flex w-5/6 m-auto justify-center items-center h-1/1 text-background">
-                      <div className="flex-3 items-start flex-col min-h-3">
-                        <p className="flex text-lg whitespace-pre">Paris,</p>
-                        <p className="flex text-sm">France</p>
-                      </div>
-                      <div className="flex flex-col justify-center items-center h-1/1 min-w-3 min-h-3">
-                        <p className="text-3xl font-bold">3</p>
-                        <p className="text-sm pb-2">people</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="hover:scale-115 hover:shadow-sm transition-scale duration-150 relative rounded-lg overflow-hidden max-w-70 h-1/1 w-2/3 bg-white min-w-40 min-h-40 max-h-70">
-                  <img className="object-cover absolute w-1/1 h-3/4" width="10" height="10" src="https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"/>
-                  <div className="absolute w-1/1 top-3/4 bottom-0 bg-tertiary min-h-10">
-                    <div className="flex-3 flex w-5/6 m-auto justify-center items-center h-1/1 text-background">
-                      <div className="flex-3 items-start flex-col min-h-3">
-                        <p className="flex text-lg whitespace-pre">Paris,</p>
-                        <p className="flex text-sm">France</p>
-                      </div>
-                      <div className="flex flex-col justify-center items-center h-1/1 min-w-3 min-h-3">
-                        <p className="text-3xl font-bold">3</p>
-                        <p className="text-sm pb-2">people</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {locations.map((location) => {
+                    return <EventTile city={location.city} country={location.country} image={location.image} price={location.price} people={location.people} key={location.id}/>
+                })}
               </div>
             </div>
           </div>
@@ -278,4 +166,3 @@ export default function Home() {
     </div>
   );
 }
-
