@@ -315,7 +315,7 @@ def generate_trip():
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
     
-    required_params = ['cityNameDest', 'start_date', 'end_date', 'min_budget', 'max_budget', 'cityNameOrigin']
+    required_params = ['cityNameDest', 'start_date', 'end_date', 'min_budget', 'max_budget', 'cityNameOrigin', 'latLongDest']
 
     for param in required_params:
         if param not in data:
@@ -436,6 +436,7 @@ def generate_trip():
         pass
         
     print(response)
+    
 
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),
