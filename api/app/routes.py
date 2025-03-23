@@ -81,7 +81,6 @@ tokyo_attractions = [
     }
 ]
 
-
 def generate_short_URL(length=8):
     characters = string.ascii_uppercase + string.digits
 
@@ -107,7 +106,7 @@ async def generate_trip():
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
     
-    required_params = ['city', 'start_date', 'end_date', 'min_budget', 'max_budget']
+    required_params = ['city', 'start_date', 'end_date', 'min_budget', 'max_budget', 'additional_info']
 
     for param in required_params:
         if param not in data:
@@ -119,14 +118,16 @@ async def generate_trip():
     )
     db.session.add(new_trip_request)
 
-    num_days = 5
-    prompt = ""
+    num_docs = 5
+    base_prompt = "Given a user-specified location, return RELEVANT events (hotels, flights, restaurants, or activities) that are near the specified location. Prioritize options that are within a reasonable distance (e.g., same city, nearby town, or accessible within a short travel time). Ensure diversity by including a mix of hotels, flights, restaurants, and activities. DO NOT BE BAD, GIVE ONLY EVENTS THAT ARE NEARBY. LOCATION MATTERS. You must spread out the opening hours so all these attractions can be visited through the given date range."
+    prompt = f"{data['city']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}. Targetted with these additional information: {data['additional_info']}"
+    prompt = base_prompt + prompt
 
-    search_results = await cohere_model.retrieve_documents(prompt, num_documents=num_days)
+    search_results = await cohere_model.retrieve_documents(prompt, num_documents=num_docs)
 
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),
-        data={}
+        data=search_results.data
     )
     db.session.add(new_intinerary)
 
