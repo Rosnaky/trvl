@@ -242,10 +242,12 @@ def generate_trip():
     )
     db.session.add(new_trip_request)
 
-    #### trip_data = asyncio.run(op.main(data["city"], data["curr_location"]))
-    #### print(trip_data)
+    trip_data = asyncio.run(op.main(data["city"], data["curr_location"]))
+    print(trip_data)
 
-    parsed_data = [json.loads(item) for item in data]
+    # return jsonify(trip_data), 201
+
+    parsed_data = [json.loads(item) for item in trip_data]
 
     # Initialize empty lists
     events = []
@@ -326,28 +328,18 @@ def generate_trip():
         prompt = f"{data['city']} trip from {data['start_date']} to {data['end_date']} with a budget of ${data['min_budget']} to ${data['max_budget']}."
     prompt = base_prompt + prompt
 
-    #### search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": latitude, "longitude": longitude}, num_documents=num_docs)
+    search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": latitude, "longitude": longitude}, num_documents=num_docs)
 
+    combine_prompt = f"Given the following attraction data: create an itinerary of {num_days} days starting from {data['start_date']} to {data['end_date']}. Fit all the costs within {data['min_budget']} and {data['max_budget']}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the JSON format: above. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT."
 
-    test_city = "London"
-    test_start_date = "01012026"
-    test_end_date = "01042026"
-    test_min_budget = 500
-    test_max_budget = 5000
-
-    combine_prompt = f"Given the following attraction data: create an itinerary of {num_days} days starting from {test_start_date} to {test_end_date}. Fit all the costs within {test_min_budget} and {test_max_budget}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the JSON format: above. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT."
-
-    documents = ["actual attraction data: " + json.dumps(dummy_attractions), "fake format data DO NOT USE: " + json.dumps(output_format)]
+    documents = ["actual attraction data: " + json.dumps(search_results), "fake format data DO NOT USE: " + json.dumps(output_format)]
 
     response = cohere_model.send_prompt(combine_prompt, documents)
     print(response)
 
-
-    search_results = dummy_attractions
-
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),
-        data=search_results
+        data=jsonify(response)
     )
     db.session.add(new_intinerary)
 

@@ -148,5 +148,7 @@ async def main(location, curr_location):
         res
     )
 
+    return res
+
 # Run the async main function
 # asyncio.run(main("Toronto", "Montreal"))
