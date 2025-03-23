@@ -1,4 +1,4 @@
-"use client"
+/**"use client"
 
 import Day from "./components/day";
 import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
@@ -171,4 +171,4 @@ const Page = () => {
     )
 }
 
-export default Page;
+export default Page;**/

@@ -34,6 +34,49 @@ export default function Home() {
     setTimeoutID(temp_id);**/
     autocompleteReal(newVal);
   }
+
+  const locations = [
+        {
+            "city": "Paris",
+            "country": "France",
+            "people": 3,
+            "price": 325,
+            "type": "Sightseeing",
+            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+        },
+        {
+            "city": "Paris",
+            "country": "France",
+            "people": 3,
+            "price": 325,
+            "type": "Sightseeing",
+            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+        },
+        {
+            "city": "Paris",
+            "country": "France",
+            "people": 3,
+            "price": 325,
+            "type": "Sightseeing",
+            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+        },
+        {
+            "city": "Paris",
+            "country": "France",
+            "people": 3,
+            "price": 325,
+            "type": "Sightseeing",
+            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+        },
+        {
+            "city": "Paris",
+            "country": "France",
+            "people": 3,
+            "price": 325,
+            "type": "Sightseeing",
+            "image": "https://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg"
+        }
+  ]
   
   async function autocompleteReal(newVal) {
     const autocomp = document.getElementById("autocomplete_container");
@@ -110,7 +153,6 @@ export default function Home() {
               <div className="group absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 hover:cursor-pointer h-1/1">
               <div className="absolute left-0 right-full group-hover:right-0 h-1/1 bg-foreground transition-right duration-500 ease-in-out"></div>
                 <Image width="20" height="20" stroke="white" src={"/search.svg"} alt="" className="absolute left-3/10 right-1/5 group-hover:scale-110 transition h-3/5 mt-1.5"/>
-                
               </div>
             </div>
             <div id="autocomplete_container" className={`overflow-hidden text-gray-400 absolute bg-white w-1/1 max-w-200 rounded-xl border-1 border-gray-300 shadow-xl ring-black-800 ${autoCompVis ? "visible" : "invisible"}`}>
