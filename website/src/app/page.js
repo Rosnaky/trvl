@@ -122,8 +122,8 @@ export default function Home() {
     <div className="w-screen h-screen bg-background flex justify-center items-center">
       <div className="flex justify-center flex-col h-3/4 w-3/4 gap-10 max-w-300 min-w-100 max-h-600">
         <div className="flex flex-shrink justify-center">
-          <div className="flex flex-col justify-center">
-            <p className="flex text-theme-blue text-8xl font-mono font-semibold">trvl</p>
+          <div className="flex flex-col justify-center text-center">
+            <p className="flex text-theme-blue text-8xl font-(family-name:--font-playwrite-us) text-center justify-center mb-3">trvl</p>
             <p className="flex justify-center text-md text-theme-blue font-semibold whitespace-pre">Make planning your travel trivial</p>
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function Home() {
             <div className="overflow-hidden flex-row relative min-h-10 rounded-xl bg-white items-center border-1 border-gray-400 shadow-xl ring-black-800">
               <input onBlur={(e) => {setTimeout(function(){setAutoCompVis(false)}, 300)}} onFocus={(e) => {setAutoCompVis(true); autocomplete(searchText)}} value={searchText} onChange={(e) => {setAutoCompVis(true); autocomplete(e.target.value); setValidPlace(false);}} placeholder={"Where to next?"} className="border-0 text-gray-600 outline-0 mt-1.5 absolute left-1/40 right-3/20"></input>
               <Link href={validPlace ? "/build/step0" : "/"} className={`hover:cursor-default absolute bg-theme-blue left-9/10 right-0 top-0 bottom-0 ${validPlace ? "hover:cursor-pointer group" : ""} h-1/1`}>
-                <div className="absolute left-0 right-full group-hover:right-0 h-1/1 bg-foreground transition-right duration-500 ease-in-out"></div>
+                <div className="absolute left-0 right-full group-hover:right-0 h-1/1 bg-theme-dark-blue transition-right duration-500 ease-in-out"></div>
                 <Image width="20" height="20" stroke="white" src={"/arrow-right.svg"} alt="" className="absolute left-3/10 right-1/5 group-hover:scale-110 transition h-3/5 mt-1.5"/>
               </Link>
             </div>
@@ -143,7 +143,7 @@ export default function Home() {
         <div className="overflow-hidden flex flex-grow justify-between items-center gap-10 mt-4 w-1/1">
           <div onClick={() => {setTimeout(function(){carouselScroll(-1)}, 300); /**setSlide(true)**/}} className="group hover:cursor-pointer hover:to-background/10 z-2 relative left-0 bg-linear-to-r from-background to-background/0 h-1/1 w-1/8 min-w-10">
             <div className="flex h-1/1 w-1/1 justify-center items-center">
-              <Image width="35" height="35" stroke="red" src={"/chevron-left.svg"} alt="" className="z-2 flex min-h-7 h-1/7 opacity-50 group-hover:scale-105 group-hover:opacity-100 transition duration-200"/>
+              <Image width="35" height="35" stroke="black" src={"/chevron-left.svg"} alt="" className="z-2 flex min-h-7 h-1/7 opacity-50 group-hover:scale-105 group-hover:opacity-100 transition duration-200"/>
             </div>
           </div>
 
