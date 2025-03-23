@@ -94,7 +94,7 @@ export default function Home() {
           let newChild = document.createElement("div");
           newChild.className = "min-h-7 pl-3 align-items text-gray-400 hover:bg-gray-100 hover:cursor-pointer";
           let text = `${json.results[i].city}, ${json.results[i].state}, ${json.results[i].country}`;
-          newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false); localStorage.setItem("latLongDest", [json.results[i].lat, json.results[i].lon])});
+          newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false); localStorage.setItem("latLongDest", [json.results[i].lat, json.results[i].lon]); localStorage.setItem("cityNameDest", json.results[i].city);});
           newChild.appendChild(document.createTextNode(text))
           autocomp.appendChild(newChild);
         }

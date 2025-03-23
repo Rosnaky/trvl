@@ -34,7 +34,12 @@ const Step0 = () => {
                 let newChild = document.createElement("div");
                 newChild.className = "min-h-7 pl-3 align-items text-gray-400 hover:bg-gray-100 hover:cursor-pointer";
                 let text = `${json.results[i].city}, ${json.results[i].state}, ${json.results[i].country}`;
-                newChild.addEventListener("click", function(){setSearchText(text); setAutoCompVis(false); localStorage.setItem("latLongOrigin", [json.results[i].lat, json.results[i].lon])});
+                newChild.addEventListener("click", function(){
+                    setSearchText(text); 
+                    setAutoCompVis(false); 
+                    localStorage.setItem("cityNameOrigin", json.results[i].city);
+                    localStorage.setItem("latLongOrigin", [json.results[i].lat, json.results[i].lon]);
+                });
                 newChild.appendChild(document.createTextNode(text))
                 autocomp.appendChild(newChild);
             }

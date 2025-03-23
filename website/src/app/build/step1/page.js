@@ -21,7 +21,14 @@ const Step1 = () => {
                     min={1}
                     max={7}
                     selected={selected}
-                    onSelect={(value) => {setSelected(value); localStorage.setItem("date", value)}}
+                    onSelect={(value) => {
+                        setSelected(value);
+                        if (value?.from && value?.to) {
+                            const formattedFrom = value.from.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+                            const formattedTo = value.to.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+                            localStorage.setItem("date", JSON.stringify({ from: formattedFrom, to: formattedTo }));
+                        }
+                    }}
                 />
             </div>
             <div className={"w-1/1 items-center justify-center flex flex-row"}>
