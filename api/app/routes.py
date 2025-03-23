@@ -205,6 +205,91 @@ output_format = {
   ]
 }
 
+asdresponse = {
+  "itinerary": [
+    {
+      "date": "12312021",
+      "activities": [
+        {"eventName": "CN Tower EdgeWalk", "cost": 195, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01012022",
+      "activities": [
+        {"eventName": "Family Fun Day at the Park", "cost": 20, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01022022",
+      "activities": [
+        {"eventName": "Annual Tech Conference", "cost": 100, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01032022",
+      "activities": [
+        {"eventName": "Blind Hockey Tournament", "cost": 0, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01042022",
+      "activities": [
+        {"eventName": "NUEVOS CAMINOS", "cost": 0, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01052022",
+      "activities": [
+        {"eventName": "Wyrdo Carnival", "cost": 0, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01062022",
+      "activities": [
+        {"eventName": "CN Tower EdgeWalk", "cost": 195, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01072022",
+      "activities": [
+        {"eventName": "Family Fun Day at the Park", "cost": 20, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01082022",
+      "activities": [
+        {"eventName": "Annual Tech Conference", "cost": 100, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    },
+    {
+      "date": "01092022",
+      "activities": [
+        {"eventName": "Blind Hockey Tournament", "cost": 0, "sector": "activity"},
+        {"eventName": "Gourmet Dinner Night", "cost": 50, "sector": "restaurant"},
+        {"eventName": "7 West Cafe", "cost": 30, "sector": "restaurant"}
+      ]
+    }
+  ]
+}
+
 def generate_short_URL(length=8):
     characters = string.ascii_uppercase + string.digits
 
@@ -330,16 +415,17 @@ def generate_trip():
 
     search_results = cohere_model.retrieve_documents(prompt, curr_pos={"latitude": latitude, "longitude": longitude}, num_documents=num_docs)
 
-    combine_prompt = f"Given the following attraction data: create an itinerary of {num_days} days starting from {data['start_date']} to {data['end_date']}. Fit all the costs within {data['min_budget']} and {data['max_budget']}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the JSON format: above. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT."
+    combine_prompt = f"Given the following attraction data: create an itinerary of {num_days} days starting from {data['start_date']} to {data['end_date']}. Fit all the costs within {data['min_budget']} and {data['max_budget']}. Plan according to the budget but every day should have at least one activity and at least two meals. Return the itinerary STRICTLY in the JSON format: above. Ensure the output is valid JSON and does not contain extra explanations. ONLY JSON MATCHING THE GIVEN OUTPUT FORMAT. - Ensure the output is valid JSON and does not contain extra explanations. - Do NOT prepend the data with the word json - The first character MUST be " + "{ STOP BEING BAD"
 
     documents = ["actual attraction data: " + json.dumps(search_results), "fake format data DO NOT USE: " + json.dumps(output_format)]
 
     response = cohere_model.send_prompt(combine_prompt, documents)
+    response = response[response.index("{"):response.index("`", 4)]
     print(response)
 
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),
-        data=jsonify(response)
+        data=response
     )
     db.session.add(new_intinerary)
 

@@ -13,6 +13,7 @@ class Item(BaseModel):
     description: str = Field(default="", description="A very short description of the event, about 30 words.")
     latitude: str = Field(default="-1", description="The latitude coordinates of the location. Must be a single floating point number.")
     longitude: str = Field(default="-1", description="The longitude coordinates of the location. Must be a single floating point number.")
+    departure_location: str = Field(default="", description="The departure location of a flight. If it is not a flight, this will be empty")
 
 class Items(BaseModel):
     projects: List[Item] = Field(description="List of items")

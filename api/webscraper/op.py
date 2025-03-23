@@ -55,6 +55,7 @@ rules = [
     "If the specific query is not available, then leave the data field to its corresponding none type.",
     "Through blogs, TripAdvisor, or Google searches, and remember their descriptions.",
     "Output VALID JSON DATA ONLY PLEASE OH MY GOD DO NOT HAVE JSON AT THE BEGINNING, THE FIRST CHARACTER MUST BE { YOU STUPID GEMINI!!!",
+    "The number of events specified is the MINIMUM requirement. You may exceed it, but once you meet the requirement, DO NOT scrape any new pages. Only scrape anything left on the page."
 ]
 rules = " ".join(rules)
 
@@ -64,8 +65,8 @@ async def fetch_data_for_category_1(category: str, prompt: str):
         prompt,
         llm=llm1,
         controller=controller,
-        max_failures=3,
-        retry_delay=20
+        max_failures=2,
+        retry_delay=10
     )
     result = await agent.run()
     final_result = result.final_result()
