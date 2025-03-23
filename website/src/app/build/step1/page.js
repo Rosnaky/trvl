@@ -21,7 +21,7 @@ const Step1 = () => {
                     min={1}
                     max={7}
                     selected={selected}
-                    onSelect={setSelected}
+                    onSelect={(value) => {setSelected(value); localStorage.setItem("date", value)}}
                 />
             </div>
             <div className={"w-1/1 items-center justify-center flex flex-row"}>

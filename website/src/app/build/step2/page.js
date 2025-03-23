@@ -21,7 +21,7 @@ const Step2 = () => {
                     return <div 
                         key={option}
                         className={"w-36 h-24 my-auto border border-white flex justify-center items-center text-white rounded-lg cursor-pointer" + (selected === option ? " bg-white/10" : " bg-transparent")}
-                        onClick={() => setSelected(option)}>
+                        onClick={() => {setSelected(option); localStorage.setItem("numPeople", option)}}>
                             <p>{option}</p>
                     </div>
                 })

@@ -16,10 +16,10 @@ const Step2 = () => {
         <div className="mt-20">
             <h2 className="text-4xl text-black text-center w-screen text-white font-bold">Anything Else?</h2>
             <div className="flex gap-4 w-1/2 mx-auto mt-10 justify-around">
-                <textarea className="bg-white flex w-1/1"/>
+                <textarea className="bg-white flex w-1/1" onChange={(value) => {setSelected(value); localStorage.setItem("additionalInfo", value)}}/>
             </div>
             <div className={"w-1/1 items-center justify-center flex flex-row"}>
-                <Link href={"/build/step3"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10">I'm flexible</Link>
+                <Link href={"/build/step3"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10">That's everything!</Link>
             </div>
         </div>
     )
