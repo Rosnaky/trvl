@@ -33,7 +33,7 @@ const Step2 = () => {
             <div className="flex flex-row-reverse w-1/2 mx-auto mt-10">
                 <Link href={"/build/step3"}>
                     <button
-                        className="border border-white w-40 h-8 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
+                        className="border border-white px-8 py-2 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
                         style={{ transition: "opacity 0.5s ease-in", opacity: selected ? 1 : 0 }}
                     >
                         Next -&gt;
