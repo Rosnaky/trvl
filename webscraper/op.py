@@ -144,9 +144,11 @@ async def main(location, curr_location):
     res = [events, hotels, restaurants, flights]
 
     # Print the raw results
-    print(
-        res
-    )
+    # print(
+    #     res
+    # )
+
+    return res
 
 # Run the async main function
-asyncio.run(main("Toronto", "Montreal"))
+# asyncio.run(main("Toronto", "Montreal"))

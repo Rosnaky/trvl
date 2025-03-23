@@ -1,3 +1,4 @@
+import asyncio
 from flask import Blueprint, request, jsonify
 from app import db
 from app.models import Itinerary, TripRequest
@@ -6,6 +7,8 @@ import string
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+
+from webscraper import op
 
 from llm.llm import CohereAPI
 
@@ -118,6 +121,8 @@ def generate_trip():
         data=data
     )
     db.session.add(new_trip_request)
+
+    trip_data = asyncio.run(op.main(data["city"], data["curr_location"]))
 
     # find num_docs by calculating substrings of data['start_date'] and data['end_date'], num_docs = num_days * 10
     start_date = datetime.strptime(data['start_date'], '%m%d%Y')
