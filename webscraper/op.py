@@ -54,6 +54,7 @@ rules = [
     "If the specific query is not available, then leave the data field to its corresponding none type.",
     "Through blogs, TripAdvisor, or Google searches, and remember their descriptions.",
 ]
+rules = " ".join(rules)
 
 async def fetch_data_for_category_1(category: str, prompt: str):
     # Adjust the prompt for each category (hotels, events, restaurants, flights)
