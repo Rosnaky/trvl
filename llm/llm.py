@@ -35,34 +35,14 @@ class CohereAPI:
     
         self.vector_store.add_documents([document])
 
-    def retrieve_documents(self, prompt: str, num_documents: int = 1):
+    def retrieve_documents(self, prompt: str, num_documents: int = 5):
 
         docs = self.retriever.invoke(prompt, k=num_documents)
 
         # print(docs)
 
-        return docs
+        return [d.metadata for d in docs]
 
-    def parse_response_to_project(self, response: str) -> List[Item]:
-        projects = []
-
-        for project_data in response.split("\n"):
-            try:
-                project_info = project_data.split(",")
-                project = Item(
-                    projectName=project_info[0],
-                    entityName=project_info[1],
-                    url=project_info[2],
-                    description=project_info[3],
-                    publicationDate=project_info[4],
-                    deadlineData=project_info[5],
-                    sector=project_info[6]
-                )
-                projects.append(project)
-            except IndexError:
-                continue
-
-        return projects
     
     def extract_structured_data(self, text: str):
         system_prompt = """You are an AI that extracts structured data from text. 
@@ -76,6 +56,8 @@ class CohereAPI:
                 "min_cost": "The minimum recommended cost to participate in the event",
                 "max_cost": "The maximum recommended cost to participate in the event",
                 "sector": "The type of activity. It must be one of the following four options: restaurant, activity, flight, hotel."
+                "url": "The url for more information about the event"
+                "description": "A very short description of the event, about 30 words."
             }
 
             - If a field is missing in the text, set it to an empty string (`""`) instead of `null`.

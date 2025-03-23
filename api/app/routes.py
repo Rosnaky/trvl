@@ -3,9 +3,20 @@ from app import db
 from app.models import Itinerary, TripRequest
 import random
 import string
+import os
+from dotenv import load_dotenv
+
+from llm.llm import CohereAPI
 
 # blueprint for streams
 api_bp = Blueprint('api', __name__, url_prefix='/api')
+
+load_dotenv()
+
+COHERE_API_KEY = os.environ.get("COHERE_API_KEY")
+PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+
+cohere_model = CohereAPI(cohere_api_key=COHERE_API_KEY, pinecone_api_key=PINECONE_API_KEY)
 
 tokyo_attractions = [
     {
@@ -89,7 +100,7 @@ def generate_short_ID(length=8):
 
 # route to create new stream
 @api_bp.route('/generate-trip', methods=['POST'])
-def generate_trip():
+async def generate_trip():
     # get the request data
     data = request.get_json()
 
@@ -107,6 +118,11 @@ def generate_trip():
         data=data
     )
     db.session.add(new_trip_request)
+
+    num_days = 5
+    prompt = ""
+
+    search_results = await cohere_model.retrieve_documents(prompt, num_documents=num_days)
 
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),
