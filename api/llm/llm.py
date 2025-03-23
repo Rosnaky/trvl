@@ -138,6 +138,7 @@ class CohereAPI:
             return project
         except (json.JSONDecodeError, ValidationError) as e:
             print(f"Error parsing JSON: {e}")
+            print(json_str)
             return None
         
     def custom_similarity_score(self, lat, lon, query_location):

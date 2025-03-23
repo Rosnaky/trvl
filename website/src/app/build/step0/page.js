@@ -66,12 +66,12 @@ const Step0 = () => {
         <div className="mt-20">
                 <Link href={"/"}>
                     <button
-                        className="ml-30 mb-10 text-white px-8 py-2 rounded-lg border-white cursor-pointer hover:bg-[#f4f4f420] transition-all"
+                        className="ml-30 mb-10 text-ui px-8 py-2 rounded-lg border-white cursor-pointer hover:bg-[#f4f4f420] transition-all"
                     >
                     <img src='/chevron-left.svg' className="inline h-4 mb-0.5 -ml-1"/> Back 
                     </button>
                 </Link>
-            <h2 className="text-4xl text-black text-center w-screen text-white font-bold mb-9">Where are you coming from?</h2>
+            <h2 className="text-4xl text-black text-center w-screen text-ui font-bold mb-9">Where are you coming from?</h2>
             <div className="relative flex-col justify-center items-center">
                 <div className="ml-auto mr-auto w-1/1 max-w-200 justify-center">
                     <div className="overflow-hidden flex-row relative min-h-10 rounded-xl bg-white items-center border-1 border-gray-400 shadow-xl ring-black-800">
@@ -84,7 +84,7 @@ const Step0 = () => {
             <div className="flex flex-row-reverse w-1/2 mx-auto mt-10">
                 <Link href={"/build/step1"}>
                     <button
-                        className="border border-white px-8 py-2 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
+                        className="border border-ui px-8 py-2 rounded-lg text-ui cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
                         style={{ transition: "opacity 0.5s ease-in", opacity: searchText.split(',').length === 3 ? 1 : 0 }}
                     >
                         Next <img src='/chevron-right.svg' className="inline h-4 mb-0.5 -mr-2"/>
