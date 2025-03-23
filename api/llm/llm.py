@@ -62,7 +62,7 @@ class CohereAPI:
                 np.array(query_embedding).reshape(1, -1),
                 np.array(doc_embedding).reshape(1, -1)
             )[0][0]
-            print(metadata)
+            # print(metadata)
 
             try:
                 if (metadata["latitude"] != "-1" and metadata["longitude"] != "-1"):

@@ -23,4 +23,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["python", "run.py"]
+CMD ["sh", "-c", "playwright install && playwright install-deps && python run.py"]
