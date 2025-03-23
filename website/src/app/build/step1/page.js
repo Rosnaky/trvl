@@ -11,8 +11,15 @@ const Step1 = () => {
 
     return (
         <div className="flex flex-col mt-20">
+            <Link href={"/build/step0"}>
+                <button
+                    className="ml-30 mb-4 text-white px-8 py-2 rounded-lg border-white cursor-pointer hover:bg-[#f4f4f420] transition-all"
+                >
+                    &lt;- Back 
+                </button>
+            </Link>
             <h2 className="text-4xl text-black text-center w-screen text-white font-bold">When?</h2>
-            <div className="mt-20">
+            <div className="mt-16">
                 <DayPicker
                     animate
                     className="text-white flex justify-center"
@@ -32,12 +39,12 @@ const Step1 = () => {
                 />
             </div>
             <div className={"w-1/1 items-center justify-center flex flex-row"}>
-                <Link href={"/build/step2"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-10">I'm flexible</Link>
+                <Link href={"/build/step2"} className="flex opacity-60 hover:opacity-100 transition duration-200 text-center text-white cursor-pointer mt-4">I'm flexible</Link>
             </div>
-            <div className="flex flex-row-reverse w-1/2 mx-auto mt-10">
+            <div className="flex flex-row-reverse w-1/2 mx-auto mt-8">
             <Link href={"/build/step2"}>
                 <button
-                    className="border border-white w-40 h-8 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
+                    className="border border-white px-8 py-2 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
                     style={{ transition: "opacity 0.5s ease-in", opacity: selected ? 1 : 0 }}
                 >
                     Next -&gt;
