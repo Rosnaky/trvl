@@ -328,9 +328,13 @@ def generate_trip():
     db.session.add(new_trip_request)
 
     trip_data = asyncio.run(op.main(data["cityNameDest"], data["cityNameOrigin"]))
-    print(trip_data)
+    
 
     # return jsonify(trip_data), 201
+    trip_data = [item.replace("\\u", "") for item in trip_data]
+    trip_data = [item.replace("\\n", "") for item in trip_data]
+
+    print(trip_data)
 
     parsed_data = [json.loads(item) for item in trip_data]
 
