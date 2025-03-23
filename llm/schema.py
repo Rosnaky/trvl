@@ -11,6 +11,8 @@ class Item(BaseModel):
     sector: str = Field(default="Unknown", description="The type of activity. It must be one of the following four options: restaurant, activity, flight, hotel.")
     url: str = Field(default="", description="The url for more information about the event")
     description: str = Field(default="", description="A very short description of the event, about 30 words.")
+    latitude: str = Field(default="0", description="The latitude coordinates of the location. Must be a single floating point number.")
+    longitude: str = Field(default="0", description="The longitude coordinates of the location. Must be a single floating point number.")
 
 class Items(BaseModel):
     projects: List[Item] = Field(description="List of items")
