@@ -7,44 +7,46 @@ import asyncio
 
 load_dotenv()
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+GEMINI_API_KEY_1 = os.environ.get("GEMINI_API_KEY_1")
+GEMINI_API_KEY_2 = os.environ.get("GEMINI_API_KEY_2")
+GEMINI_API_KEY_3 = os.environ.get("GEMINI_API_KEY_3")
+GEMINI_API_KEY_4 = os.environ.get("GEMINI_API_KEY_4")
 
+# Models now only contain a raw_info field to store the large block of text
 class EventData(BaseModel):
-    description: str
-    price: float
-    time: str
-    latitude: float
-    longitude: float
+    raw_info: str  # Block of text for events
+    url: str
+    address: str
 
 class HotelData(BaseModel):
-    name: str
-    price_per_night: float
-    location: str
-    description: str
+    raw_info: str  # Block of text for hotels
+    url: str
+    address: str
 
 class RestaurantData(BaseModel):
-    name: str
-    price_range: str
-    location: str
-    description: str
+    raw_info: str  # Block of text for restaurants
+    url: str
+    address: str
 
 class FlightData(BaseModel):
-    airline: str
-    price: float
-    departure_time: str
-    arrival_time: str
+    raw_info: str  # Block of text for flights
+    url: str
+    departure_location: str
 
 class FinalData(BaseModel):
     events: list[EventData]
     hotels: list[HotelData]
     restaurants: list[RestaurantData]
-    flight: FlightData
+    flights: list[FlightData]
 
 # Initialize the Controller and output model
 controller = Controller(output_model=FinalData)
 
 # LLM setup for Google Gemini API
-llm = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY)
+llm1 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY_1)
+llm2 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY_2)
+llm3 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY_3)
+llm4 = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=GEMINI_API_KEY_4)
 
 # Rules for scraping and collecting the data
 rules = [
@@ -53,24 +55,80 @@ rules = [
     "Through blogs, TripAdvisor, or Google searches, and remember their descriptions.",
 ]
 
-prompt = """
-This is the request: I want to go to Montreal. Plan the trip, with hotels, restaurants, events, and plane tickets.
-Find 3 events.
-Find 3 hotels with their prices.
-Find 3 restaurants.
-Find a plane ticket.
-"""
-
-async def main():
+async def fetch_data_for_category_1(category: str, prompt: str):
+    # Adjust the prompt for each category (hotels, events, restaurants, flights)
     agent = Agent(
         prompt,
-        llm=llm,
+        llm=llm1,
         controller=controller,
+        max_failures=3,
+        retry_delay=20
     )
-
     result = await agent.run()
-    # Ensure final result is in the correct format, if `final_result` is a method, use it to extract the data
-    print(FinalData.model_validate_json(result.final_result()))  # validate and output the final result
+    return result.final_result()
+async def fetch_data_for_category_2(category: str, prompt: str):
+    # Adjust the prompt for each category (hotels, events, restaurants, flights)
+    agent = Agent(
+        prompt,
+        llm=llm2,
+        controller=controller,
+        max_failures=3,
+        retry_delay=20
+    )
+    result = await agent.run()
+    return result.final_result()
+async def fetch_data_for_category_3(category: str, prompt: str):
+    # Adjust the prompt for each category (hotels, events, restaurants, flights)
+    agent = Agent(
+        prompt,
+        llm=llm3,
+        controller=controller,
+        max_failures=3,
+        retry_delay=20
+    )
+    result = await agent.run()
+    return result.final_result()
+async def fetch_data_for_category_4(category: str, prompt: str):
+    # Adjust the prompt for each category (hotels, events, restaurants, flights)
+    agent = Agent(
+        prompt,
+        llm=llm4,
+        controller=controller,
+        max_failures=3,
+        retry_delay=20
+    )
+    result = await agent.run()
+    return result.final_result()
+
+async def main(location, curr_location):
+    # Create separate prompts for each category
+    event_prompt = f"Find 2 events in {location} with description, hours open, location, and price range." + rules
+    hotel_prompt = f"Find 2 hotels in {location} with description, location, price per night, and address." + rules
+    restaurant_prompt = f"Find 2 restaurants in {location} with description, price range, location, and hours open." + rules
+    flight_prompt = f"Find 1 flight from your city to {location} from {curr_location} with airline, price, departure/arrival time, and URL." + rules
+
+    # Run tasks concurrently for each category
+    events_task = asyncio.create_task(fetch_data_for_category_1('events', event_prompt))
+    hotels_task = asyncio.create_task(fetch_data_for_category_2('hotels', hotel_prompt))
+    restaurants_task = asyncio.create_task(fetch_data_for_category_3('restaurants', restaurant_prompt))
+    flights_task = asyncio.create_task(fetch_data_for_category_4('flights', flight_prompt))
+
+    # Wait for all tasks to complete
+    await asyncio.gather(events_task, hotels_task, restaurants_task, flights_task)
+
+    # Gather results
+    events = events_task.result()
+    hotels = hotels_task.result()
+    restaurants = restaurants_task.result()
+    flights = flights_task.result()
+
+    # Print the raw results
+    print(FinalData(
+        events=events,
+        hotels=hotels,
+        restaurants=restaurants,
+        flights=flights
+    ).model_dump_json())
 
 # Run the async main function
-asyncio.run(main())
+asyncio.run(main("Toronto", "Montreal"))
