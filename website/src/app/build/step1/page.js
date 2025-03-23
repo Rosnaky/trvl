@@ -15,7 +15,7 @@ const Step1 = () => {
                 <button
                     className="ml-30 mb-4 text-white px-8 py-2 rounded-lg border-white cursor-pointer hover:bg-[#f4f4f420] transition-all"
                 >
-                    &lt;- Back 
+                    <img src='/chevron-left.svg' className="inline h-4 mb-0.5"/> Back 
                 </button>
             </Link>
             <h2 className="text-4xl text-black text-center w-screen text-white font-bold">When?</h2>
@@ -47,7 +47,7 @@ const Step1 = () => {
                     className="border border-white px-8 py-2 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
                     style={{ transition: "opacity 0.5s ease-in", opacity: selected ? 1 : 0 }}
                 >
-                    Next -&gt;
+                    Next <img src='/chevron-right.svg' className="inline h-4 mb-0.5 -mr-2"/>
                 </button>
             </Link>
             </div>

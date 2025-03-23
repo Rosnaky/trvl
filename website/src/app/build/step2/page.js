@@ -14,14 +14,24 @@ const Step2 = () => {
 
     return (
         <div className="mt-20">
+            <Link href={"/build/step1"}>
+                <button
+                    className="ml-30 mb-12 text-white px-8 py-2 rounded-lg border-white cursor-pointer hover:bg-[#f4f4f420] transition-all"
+                >
+                    <img src='/chevron-left.svg' className="inline h-4 mb-0.5"/> Back 
+                </button>
+            </Link>
             <h2 className="text-4xl text-black text-center w-screen text-white font-bold">Who?</h2>
             <div className="flex gap-4 w-1/2 mx-auto mt-10 justify-around">
             {
                 options.map((option) => {
                     return <div 
                         key={option}
-                        className={"w-36 h-24 my-auto border border-white flex justify-center items-center text-white rounded-lg cursor-pointer" + (selected === option ? " bg-white/10" : " bg-transparent")}
-                        onClick={() => {setSelected(option); localStorage.setItem("numPeople", option)}}>
+                        className={"w-36 h-24 my-auto border border-white flex justify-center items-center text-white rounded-lg cursor-pointer hover:bg-white/10" + (selected === option ? " bg-white/20" : " bg-transparent")}
+                        onClick={() => {
+                            setSelected(selected === option ? null : option)
+                            localStorage.setItem("numPeople", option)
+                        }}>
                             <p>{option}</p>
                     </div>
                 })
@@ -36,7 +46,7 @@ const Step2 = () => {
                         className="border border-white px-8 py-2 rounded-lg text-white cursor-pointer hover:bg-[#f4f4f420] transition-all opacity-100"
                         style={{ transition: "opacity 0.5s ease-in", opacity: selected ? 1 : 0 }}
                     >
-                        Next -&gt;
+                        Next <img src='/chevron-right.svg' className="inline h-4 mb-0.5 -mr-2"/>
                     </button>
                 </Link>
             </div>
