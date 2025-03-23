@@ -1,0 +1,6 @@
+python-dotenv
+flask[async]
+Flask-SQLAlchemy
+Flask-Migrate
+psycopg2-binary
+cohere
