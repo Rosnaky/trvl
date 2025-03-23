@@ -9,6 +9,8 @@ class Item(BaseModel):
     min_cost: str = Field(default="", description="The minimum recommended cost to participate in the event")
     max_cost: str = Field(default="", description="The maximum recommended cost to participate in the event")
     sector: str = Field(default="Unknown", description="The type of activity. It must be one of the following four options: restaurant, activity, flight, hotel.")
+    url: str = Field(default="", description="The url for more information about the event")
+    description: str = Field(default="", description="A very short description of the event, about 30 words.")
 
 class Items(BaseModel):
     projects: List[Item] = Field(description="List of items")
