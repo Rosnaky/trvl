@@ -6,7 +6,7 @@ from langchain_cohere import CohereEmbeddings
 from langchain_pinecone import PineconeVectorStore
 import cohere
 from langchain_core.documents import Document
-from typing import List
+from typing import Dict, List
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain.chat_models import init_chat_model
 from pydantic import ValidationError
@@ -19,7 +19,7 @@ from llm.schema import Items, Item
 THRESHOLD_SIMILARITY = 0.4
 
 class CohereAPI:
-    def __init__(self, cohere_api_key: str, pinecone_api_key: str, model_name: str = "command-r-plus"):
+    def __init__(self, cohere_api_key: str, pinecone_api_key: str, model_name: str = "command-a-03-2025"):
         self.pc = Pinecone(api_key=pinecone_api_key)
         index = self.pc.Index("travel")
         self.langchainModel = init_chat_model(model_name, model_provider="cohere")
@@ -62,7 +62,7 @@ class CohereAPI:
                 np.array(query_embedding).reshape(1, -1),
                 np.array(doc_embedding).reshape(1, -1)
             )[0][0]
-            print(metadata)
+            # print(metadata)
 
             try:
                 if (metadata["latitude"] != "-1" and metadata["longitude"] != "-1"):
@@ -148,3 +148,14 @@ class CohereAPI:
             return location_score * 0.3 
         except:
             return 0.1
+
+    def send_prompt(self, prompt: str, documents: List = [], max_tokens: int = 2048, temperature: float = 0) -> Dict[str, str]:
+        response = self.cohereModel.chat(
+            model=self.model_name,
+            messages=[{"role": "user", "content": prompt}],
+            documents=documents,
+            max_tokens=max_tokens,
+            temperature=temperature
+        )
+
+        return response.message.content[0].text
