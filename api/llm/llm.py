@@ -64,12 +64,15 @@ class CohereAPI:
             )[0][0]
             print(metadata)
 
-            if (metadata["latitude"] != "-1" and metadata["longitude"] != "-1"):
-                similarity = similarity*0.7 + self.custom_similarity_score(metadata["latitude"], metadata["longitude"], curr_pos)*0.3
+            try:
+                if (metadata["latitude"] != "-1" and metadata["longitude"] != "-1"):
+                    similarity = similarity*0.7 + self.custom_similarity_score(metadata["latitude"], metadata["longitude"], curr_pos)*0.3
 
-            # print(str(similarity) + " " + str(metadata))
-            if (similarity > THRESHOLD_SIMILARITY):
-                results.append(metadata)
+                # print(str(similarity) + " " + str(metadata))
+                if (similarity > THRESHOLD_SIMILARITY):
+                    results.append(metadata)
+            except:
+                pass
 
         return results
 
