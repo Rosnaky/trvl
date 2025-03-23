@@ -6,12 +6,6 @@ import Link from "next/link"
 const Step3 = () => {
     const [selected, setSelected] = useState(null)
 
-    const options = [
-        "Alone", "With SO", "Friends", "Family"
-    ]
-
-    console.log(selected);
-
     const [loading, setLoading] = useState(false)
 
     const handleSubmit = async () => {
@@ -24,7 +18,7 @@ const Step3 = () => {
         const minBudget = "20"
         const maxBudget = "80"
         const additionalInfo = selected || localStorage.getItem('additionalInfo'); // Use `selected` if available, else fallback to localStorage
-        
+
         const params = {
             cityNameDest: cityNameDest,
             start_date: startDate,
@@ -34,8 +28,10 @@ const Step3 = () => {
             cityNameOrigin: cityNameOrigin,
             additionalInfo
         };
-    
+
         try {
+            console.log(params)
+
             const response = await fetch("http://localhost:5050/generate-trip", {
                 method: "POST",
                 headers: {
@@ -43,7 +39,6 @@ const Step3 = () => {
                 },
                 body: JSON.stringify(params) // Send all parameters in the request body
             });
-            console.log("Sending!...")
     
             if (response.ok) {
                 console.log("Script initialized successfully");
