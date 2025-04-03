@@ -6,7 +6,7 @@ from langchain_cohere import CohereEmbeddings
 from langchain_pinecone import PineconeVectorStore
 import cohere
 from langchain_core.documents import Document
-from typing import List
+from typing import Dict, List
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain.chat_models import init_chat_model
 from pydantic import ValidationError
@@ -19,7 +19,7 @@ from llm.schema import Items, Item
 THRESHOLD_SIMILARITY = 0.4
 
 class CohereAPI:
-    def __init__(self, cohere_api_key: str, pinecone_api_key: str, model_name: str = "command-r-plus"):
+    def __init__(self, cohere_api_key: str, pinecone_api_key: str, model_name: str = "command-a-03-2025"):
         self.pc = Pinecone(api_key=pinecone_api_key)
         index = self.pc.Index("travel")
         self.langchainModel = init_chat_model(model_name, model_provider="cohere")
@@ -62,14 +62,17 @@ class CohereAPI:
                 np.array(query_embedding).reshape(1, -1),
                 np.array(doc_embedding).reshape(1, -1)
             )[0][0]
-            print(metadata)
+            # print(metadata)
 
-            if (metadata["latitude"] != "-1" and metadata["longitude"] != "-1"):
-                similarity = similarity*0.7 + self.custom_similarity_score(metadata["latitude"], metadata["longitude"], curr_pos)*0.3
+            try:
+                if (metadata["latitude"] != "-1" and metadata["longitude"] != "-1"):
+                    similarity = similarity*0.7 + self.custom_similarity_score(metadata["latitude"], metadata["longitude"], curr_pos)*0.3
 
-            # print(str(similarity) + " " + str(metadata))
-            if (similarity > THRESHOLD_SIMILARITY):
-                results.append(metadata)
+                # print(str(similarity) + " " + str(metadata))
+                if (similarity > THRESHOLD_SIMILARITY):
+                    results.append(metadata)
+            except:
+                pass
 
         return results
 
@@ -90,6 +93,7 @@ class CohereAPI:
                 "description": "A very short description of the event, about 30 words."
                 "latitude": "The latitude coordinates of the location. Must be a single floating point number."
                 "longitude": "The longitude coordinates of the location. Must be a single floating point number."
+                "departure_location": "The departure location of a flight. If it is not a flight, this will be empty"
             }
 
             - If a field is missing in the text, set it to an empty string (`""`) instead of `null`.
@@ -113,6 +117,13 @@ class CohereAPI:
 
     def parse_json(self, json_str: str):
         json_str = json_str.replace("\n", "")
+        try:
+
+            json_str = json_str[json_str.index("{"):]
+            json_str = json_str[:json_str.index("`", 4)]
+        except:
+            # return jsonify({'error': 'No response from Cohere'}), 500
+            pass
         # print(json_str)
         try:
             data = json.loads(json_str) 
@@ -124,6 +135,7 @@ class CohereAPI:
             data.setdefault("max_cost", "")
             data["latitude"] = str(data.get("latitude", "-1"))
             data["longitude"] = str(data.get("longitude", "-1"))
+            data.setdefault("departure_location", "")
 
             # with open("a.txt", "w") as f:
             #     f.write(str(data))
@@ -133,6 +145,7 @@ class CohereAPI:
             return project
         except (json.JSONDecodeError, ValidationError) as e:
             print(f"Error parsing JSON: {e}")
+            print(json_str)
             return None
         
     def custom_similarity_score(self, lat, lon, query_location):
@@ -145,3 +158,14 @@ class CohereAPI:
             return location_score * 0.3 
         except:
             return 0.1
+
+    def send_prompt(self, prompt: str, documents: List = [], max_tokens: int = 2048, temperature: float = 0) -> Dict[str, str]:
+        response = self.cohereModel.chat(
+            model=self.model_name,
+            messages=[{"role": "user", "content": prompt}],
+            documents=documents,
+            max_tokens=max_tokens,
+            temperature=temperature
+        )
+
+        return response.message.content[0].text
