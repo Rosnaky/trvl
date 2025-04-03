@@ -81,7 +81,14 @@ Total volume of tanks: 5,700,000 litres (1,506,000 US gal)"""
     model.add_document(data=text4)
 
 
+#     res = model.retrieve_documents(
+#         # context=sys_prompt,
+#         prompt=human_prompt + actual_prompt,
+#         curr_pos={"latitude": 37.7749, "longitude": -122.4194},
+#         num_documents=2
+#     )
     human_prompt = "Return a list of events that are most relevant to the following prompt. Consider all factors."
+
 
     actual_prompt = "I am a software engineering student who makes a lot of money. I am single and have no budget concerns. I am going to Toronto"
 

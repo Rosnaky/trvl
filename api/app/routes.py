@@ -443,7 +443,7 @@ def generate_trip():
         pass
         
     print(response)
-    
+   
 
     new_intinerary = Itinerary(
         short_URL=generate_short_URL(),

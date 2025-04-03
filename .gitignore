@@ -1,5 +1,4 @@
 .env
-env.sh
 .venv
 /__pycache__
 /*.pyc
